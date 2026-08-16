@@ -11,6 +11,8 @@ export type MediaItem = {
 export type HomepageMedia = {
   latest: MediaItem[];
   total: number;
+  lastDate: string;
+  topicCount: number;
 };
 
 const LATEST_COUNT = 8;
@@ -86,10 +88,24 @@ export function parseMediaTimeline(markdown: string): MediaItem[] {
   return items;
 }
 
-export function loadHomepageMedia(limit = LATEST_COUNT): HomepageMedia {
-  const all = parseMediaTimeline(timelineMarkdown);
+/** Outlet/show prefix before a colon; talks and papers without a colon count as Talks. */
+export function mediaTopicFromTitle(title: string): string {
+  const colon = title.indexOf(":");
+  if (colon === -1) return "Talks";
+  return title.slice(0, colon).trim();
+}
+
+export function buildMediaStats(items: MediaItem[], limit = LATEST_COUNT): HomepageMedia {
+  const lastDate = items.reduce((latest, item) => (item.date > latest ? item.date : latest), "");
+  const topics = new Set(items.map((item) => mediaTopicFromTitle(item.title)));
   return {
-    total: all.length,
-    latest: all.filter((item) => !isTitleCardOnly(item)).slice(0, limit),
+    total: items.length,
+    lastDate,
+    topicCount: topics.size,
+    latest: items.filter((item) => !isTitleCardOnly(item)).slice(0, limit),
   };
+}
+
+export function loadHomepageMedia(limit = LATEST_COUNT): HomepageMedia {
+  return buildMediaStats(parseMediaTimeline(timelineMarkdown), limit);
 }
