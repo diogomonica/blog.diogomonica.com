@@ -2,22 +2,11 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { SITE, DISPLAY, BIO, SAME_AS } from "../lib/site";
-import { buildStats, monthWindow } from "../lib/stats";
-import { histogramSvg, sparklineSvg } from "../lib/chart";
+import { buildStats } from "../lib/stats";
 
 const stats = buildStats(await getCollection("posts"));
 const featuredDates = new Set(stats.posts.slice(0, 8).map((p) => p.date + p.slug));
 const years = stats.yearCounts.map((y) => y.year);
-const postsHist = histogramSvg(stats.yearActivity, `Posts per year, ${stats.firstYear} to ${stats.lastYear}`);
-const rangeHist = histogramSvg(stats.yearActivity.map((n) => (n > 0 ? 1 : 0)), `Years with posts, ${stats.firstYear} to ${stats.lastYear}`);
-const lastHist = histogramSvg(stats.cumulativeByYear, "Cumulative posts by year");
-const topicHist = histogramSvg(stats.topicCounts, "Top topic counts");
-const sparks = Object.fromEntries(
-  stats.posts.map((post) => [
-    post.date + post.slug,
-    sparklineSvg(monthWindow(stats.posts, post.date), `Post activity around ${post.date}`),
-  ]),
-);
 
 const person = {
   "@type": "Person",
@@ -48,22 +37,22 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
     <article class="stat-card">
       <span class="stat-label">Posts</span>
       <span class="stat-value">{stats.total}</span>
-      <Fragment set:html={postsHist} />
+      <span class="stat-hint">Static collection</span>
     </article>
     <article class="stat-card">
       <span class="stat-label">Active</span>
       <span class="stat-value">{stats.yearsActive}</span>
-      <Fragment set:html={rangeHist} />
+      <span class="stat-hint">Writing years</span>
     </article>
     <article class="stat-card">
       <span class="stat-label">Last post</span>
       <span class="stat-value">{stats.lastDate}</span>
-      <Fragment set:html={lastHist} />
+      <span class="stat-hint">Archive closed</span>
     </article>
     <article class="stat-card">
       <span class="stat-label">Topics</span>
       <span class="stat-value">{stats.topicCount}</span>
-      <Fragment set:html={topicHist} />
+      <span class="stat-hint">From post tags</span>
     </article>
   </section>
 
@@ -86,7 +75,6 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
           <tr>
             <th>Date</th>
             <th>Title</th>
-            <th>Signal</th>
             <th>Topics</th>
           </tr>
         </thead>
@@ -97,9 +85,6 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
               <td class="col-title">
                 <a href={post.href}>{post.title}</a>
                 {post.description && <p>{post.description}</p>}
-              </td>
-              <td class="col-spark">
-                <Fragment set:html={sparks[post.date + post.slug]} />
               </td>
               <td class="col-topics">{post.tags.join(", ")}</td>
             </tr>

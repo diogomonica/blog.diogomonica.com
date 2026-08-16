@@ -246,13 +246,11 @@ h2 { font-size: 1rem; margin: 0; font-weight: 600; }
   line-height: 1.1;
   color: var(--fg);
 }
-.stat-card .hist-svg {
+.stat-hint {
   display: block;
-  width: 100%;
-  height: 36px;
-  margin-top: auto;
-  padding-top: 0.85rem;
-  color: var(--fg);
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 .chips {
@@ -356,13 +354,6 @@ h2 { font-size: 1rem; margin: 0; font-weight: 600; }
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.45;
-}
-.col-spark { width: 6.4rem; }
-.spark-svg {
-  display: block;
-  width: 88px;
-  height: 28px;
-  color: var(--fg);
 }
 .col-topics { width: 9.5rem; color: var(--muted); font-size: 0.8rem; }
 
@@ -506,12 +497,9 @@ article h1 { font-size: clamp(1.7rem, 3.4vw, 2.35rem); }
     height: auto;
   }
   .top-nav { width: 100%; justify-content: flex-start; }
-  .col-spark,
   .col-topics,
   .feed-table th:nth-child(3),
-  .feed-table th:nth-child(4),
-  .feed-table td:nth-child(3),
-  .feed-table td:nth-child(4) { display: none; }
+  .feed-table td:nth-child(3) { display: none; }
   .col-title p { display: none; }
 }
 
