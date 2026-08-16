@@ -66,6 +66,10 @@ export const PERSON = {
   url: APEX,
   description: BIO,
   jobTitle: ROLES,
+  hasOccupation: {
+    '@type': 'Occupation',
+    name: 'CEO responsibilities, Anchorage Digital',
+  },
   sameAs: [...SAME_AS, SITE],
   identifier: {
     '@type': 'PropertyValue',

@@ -8,7 +8,7 @@ tags: ["crypto-anchors", "infosec"]
 deadImages: []
 ---
 
-I've been thinking about a concept that [Nathan McCauley](https://twitter.com/nathanmccauley) and I came up with a few years ago: [crypto-anchoring](https://www.youtube.com/watch?v=lrGbK6fE7bI&ref=blog.diogomonica.com)—and how much impact this kind of architectural decision could have in the breaches that we've been [experiencing lately](http://fortune.com/2017/10/02/equifax-credit-breach-total/).
+I've been thinking about a concept that I came up with a few years ago: [crypto-anchoring](https://www.youtube.com/watch?v=lrGbK6fE7bI&ref=blog.diogomonica.com)—and how much impact this kind of architectural decision could have in the breaches that we've been [experiencing lately](http://fortune.com/2017/10/02/equifax-credit-breach-total/).
 
 ![](/content/images/2017/10/crypto-anchor.png)
 

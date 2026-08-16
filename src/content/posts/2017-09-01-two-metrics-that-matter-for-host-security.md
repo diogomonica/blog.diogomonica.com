@@ -51,7 +51,7 @@ The good news is that there are several projects out there that will make it eas
 
 With the rise in popularity of tools like [linuxkit](https://github.com/linuxkit/linuxkit) for OS image building and [infrakit](https://github.com/docker/infrakit) for automated infrastructure rolling-deploys, refreshing every host in your infrastructure on a regular basis is no longer a pipe-dream—making reverse uptime and golden image freshness the two most important security metrics to track for host security.
 
-Thanks to [Dino Dai Zovi](https://twitter.com/dinodaizovi) for pushing me to put this down in writing and [Nathan McCauley](https://twitter.com/nathanmccauley) for the review.
+Thanks to [Dino Dai Zovi](https://twitter.com/dinodaizovi) for pushing me to put this down in writing and for the review.
 
 ---
 
