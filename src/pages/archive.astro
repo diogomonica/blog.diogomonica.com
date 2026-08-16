@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import { DISPLAY } from "../lib/site";
+const posts = (await getCollection("posts")).sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+<Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/">
+  <h1>Archive</h1>
+  <ol class="post-list">
+    {posts.map((post) => {
+      const href = `/${post.data.date.replaceAll("-", "/")}/${post.data.slug}/`;
+      return (
+        <li>
+          <time datetime={post.data.date}>{post.data.date}</time>
+          {" — "}
+          <a href={href}>{post.data.title}</a>
+        </li>
+      );
+    })}
+  </ol>
+</Base>

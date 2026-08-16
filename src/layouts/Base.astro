@@ -1,0 +1,56 @@
+---
+import "../styles/global.css";
+import { SITE, DISPLAY, SAME_AS } from "../lib/site";
+interface Props { title: string; description: string; path: string; ogType?: string; jsonLd?: object; image?: string; }
+const { title, description, path, ogType = "website", jsonLd, image } = Astro.props;
+const url = new URL(path, SITE).href;
+const ogImage = image ? new URL(image, SITE).href : new URL("/favicon.png", SITE).href;
+const pageTitle = path === "/" ? `${DISPLAY}` : `${title} · ${DISPLAY}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={url} />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="alternate" type="application/rss+xml" title={DISPLAY} href={new URL("/rss.xml", SITE).href} />
+  <meta property="og:site_name" content={DISPLAY} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={url} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@diogomonica" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  {SAME_AS.map((href) => <link rel="me" href={href} />)}
+  {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+</head>
+<body>
+  <header class="site-header"><div class="wrap">
+    <a class="brand" href="/">{DISPLAY}</a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/archive/">Archive</a>
+      <a href="/media-timeline/">Media</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </div></header>
+  <main class="wrap"><slot /></main>
+  <footer class="site-footer"><div class="wrap">
+    <span>© {DISPLAY}</span>
+    <nav>
+      <a href="https://diogomonica.com">diogomonica.com</a>
+      <a rel="me" href="https://x.com/diogomonica">X</a>
+      <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
+      <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
+      <a rel="me" href="https://www.wikidata.org/wiki/Q111948997">Wikidata</a>
+    </nav>
+  </div></footer>
+</body>
+</html>

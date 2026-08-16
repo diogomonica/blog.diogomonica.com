@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../../../layouts/Base.astro";
+import { SITE, DISPLAY, SAME_AS } from "../../../../lib/site";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => {
+    const [year, month, day] = post.data.date.split("-");
+    return { params: { year, month, day, slug: post.data.slug }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { year, month, day, slug } = Astro.params;
+const path = `/${year}/${month}/${day}/${slug}/`;
+const person = { "@type": "Person", "@id": SITE + "/#person", "name": DISPLAY, "url": "https://diogomonica.com", "sameAs": SAME_AS };
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    person,
+    {
+      "@type": "Article",
+      "headline": post.data.title,
+      "description": post.data.description,
+      "datePublished": post.data.published,
+      "url": new URL(path, SITE).href,
+      "author": { "@id": SITE + "/#person" },
+      "mainEntityOfPage": new URL(path, SITE).href,
+    },
+  ],
+};
+---
+<Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd}>
+  <article>
+    <header>
+      <p class="byline"><time datetime={post.data.date}>{post.data.date}</time></p>
+      <h1>{post.data.title}</h1>
+    </header>
+    <div class="content">
+      <Content />
+    </div>
+  </article>
+</Base>
