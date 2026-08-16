@@ -246,12 +246,6 @@ h2 { font-size: 1rem; margin: 0; font-weight: 600; }
   line-height: 1.1;
   color: var(--fg);
 }
-.stat-hint {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: 0.78rem;
-}
 
 .chips {
   display: flex;
@@ -334,7 +328,23 @@ h2 { font-size: 1rem; margin: 0; font-weight: 600; }
   border-bottom: 1px solid var(--line);
   vertical-align: middle;
 }
-.post-row:last-child td { border-bottom: 0; }
+.post-row:last-child td,
+.media-row:last-child td { border-bottom: 0; }
+.latest-media { margin-top: 2.25rem; }
+.col-thumb {
+  width: 3.25rem;
+  padding-right: 0.65rem;
+}
+.media-thumb {
+  display: block;
+  width: 40px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bg-elev);
+}
 .col-date {
   width: 7.2rem;
   color: var(--muted);
@@ -497,9 +507,7 @@ article h1 { font-size: clamp(1.7rem, 3.4vw, 2.35rem); }
     height: auto;
   }
   .top-nav { width: 100%; justify-content: flex-start; }
-  .col-topics,
-  .feed-table th:nth-child(3),
-  .feed-table td:nth-child(3) { display: none; }
+  .col-topics { display: none; }
   .col-title p { display: none; }
 }
 
