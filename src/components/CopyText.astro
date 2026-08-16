@@ -1,0 +1,45 @@
+---
+interface Props {
+  target: string;
+}
+
+const { target } = Astro.props;
+---
+<button type="button" class="copy-link" data-copy-text={target} aria-live="polite">
+  Copy
+</button>
+<script>
+  document.querySelectorAll("[data-copy-text]").forEach((button) => {
+    if (!(button instanceof HTMLButtonElement)) return;
+    const selector = button.dataset.copyText ?? "";
+    const idle = "Copy";
+    let timer = 0;
+    button.addEventListener("click", async () => {
+      const root = document.querySelector(selector);
+      if (!(root instanceof HTMLElement)) return;
+      const nodes = root.matches("p") ? [root] : [...root.querySelectorAll("p")];
+      const text = (nodes.length > 0 ? nodes : [root])
+        .map((node) => (node.textContent ?? "").trim())
+        .filter(Boolean)
+        .join("\n\n");
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const field = document.createElement("textarea");
+        field.value = text;
+        field.setAttribute("readonly", "");
+        field.style.position = "fixed";
+        field.style.left = "-9999px";
+        document.body.appendChild(field);
+        field.select();
+        document.execCommand("copy");
+        field.remove();
+      }
+      button.textContent = "Copied";
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        button.textContent = idle;
+      }, 1600);
+    });
+  });
+</script>
