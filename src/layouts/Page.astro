@@ -1,8 +1,14 @@
 ---
 import Base from "./Base.astro";
 import { PERSON, SITE } from "../lib/site";
-const { title, description, permalink } = Astro.props.frontmatter;
-const path = permalink || "/media-timeline/";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+
+const { title, description, path } = Astro.props;
 const current = path === "/media-timeline/" ? "media" : undefined;
 const jsonLd = {
   "@context": "https://schema.org",

@@ -1,4 +1,4 @@
-import timelineMarkdown from "../pages/media-timeline.md?raw";
+import timelineMarkdown from "../data/media-timeline.md?raw";
 
 export type MediaItem = {
   title: string;
@@ -96,6 +96,10 @@ export function buildMediaStats(items: MediaItem[], limit = LATEST_COUNT): Homep
   };
 }
 
+export function loadMediaTimeline(): MediaItem[] {
+  return parseMediaTimeline(timelineMarkdown);
+}
+
 export function loadHomepageMedia(limit = LATEST_COUNT): HomepageMedia {
-  return buildMediaStats(parseMediaTimeline(timelineMarkdown), limit);
+  return buildMediaStats(loadMediaTimeline(), limit);
 }
