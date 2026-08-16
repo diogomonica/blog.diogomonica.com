@@ -13,7 +13,7 @@ interface Props {
   ogType?: string;
   jsonLd?: object;
   image?: string;
-  current?: "home" | "archive" | "media";
+  current?: "home" | "about" | "archive" | "media";
   canonical?: string;
 }
 const { title, description, path, ogType = "website", jsonLd, image, current, canonical } = Astro.props;
@@ -35,6 +35,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   </style>
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
+  <meta name="author" content={DISPLAY} />
   <link rel="canonical" href={canonicalHref} />
   <link rel="icon" href="/favicon.png" type="image/png" />
   <link rel="alternate" type="application/rss+xml" title={DISPLAY} href={new URL("/rss.xml", SITE).href} />
@@ -71,6 +72,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
       </a>
       <nav class="top-nav" aria-label="Site">
         <a href="/" aria-current={current === "home" ? "page" : undefined}>Posts</a>
+        <a href="/about/" aria-current={current === "about" ? "page" : undefined}>About</a>
         <a href="/archive/" aria-current={current === "archive" ? "page" : undefined}>Archive</a>
         <a href="/media-timeline/" aria-current={current === "media" ? "page" : undefined}>Media</a>
         <a class="nav-primary" href="/rss.xml">RSS</a>

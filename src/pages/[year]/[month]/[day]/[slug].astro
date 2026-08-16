@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Base from "../../../../layouts/Base.astro";
 import RecordRail from "../../../../components/RecordRail.astro";
-import { SITE, DISPLAY, SAME_AS } from "../../../../lib/site";
+import { PERSON, PERSON_ID, SITE } from "../../../../lib/site";
 import { buildPostRecords } from "../../../../lib/posts";
 
 export async function getStaticPaths() {
@@ -21,21 +21,20 @@ const { Content } = await render(post);
 const { year, month, day, slug } = Astro.params;
 const path = `/${year}/${month}/${day}/${slug}/`;
 const url = new URL(path, SITE).href;
-const person = { "@type": "Person", "@id": SITE + "/#person", "name": DISPLAY, "url": "https://diogomonica.com", "sameAs": SAME_AS };
+const posting = {
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.published,
+  url,
+  author: { "@id": PERSON_ID },
+  mainEntityOfPage: url,
+  inLanguage: "en",
+  ...(post.data.tags.length > 0 ? { keywords: post.data.tags } : {}),
+};
 const jsonLd = {
   "@context": "https://schema.org",
-  "@graph": [
-    person,
-    {
-      "@type": "Article",
-      "headline": post.data.title,
-      "description": post.data.description,
-      "datePublished": post.data.published,
-      "url": url,
-      "author": { "@id": SITE + "/#person" },
-      "mainEntityOfPage": url,
-    },
-  ],
+  "@graph": [PERSON, posting],
 };
 ---
 <Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd} canonical={post.data.canonical}>
