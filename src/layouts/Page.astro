@@ -3,6 +3,7 @@ import Base from "./Base.astro";
 import { DISPLAY, SITE } from "../lib/site";
 const { title, description, permalink } = Astro.props.frontmatter;
 const path = permalink || "/media-timeline/";
+const current = path === "/media-timeline/" ? "media" : undefined;
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -11,9 +12,9 @@ const jsonLd = {
   ],
 };
 ---
-<Base title={title} description={description} path={path} jsonLd={jsonLd}>
-  <article class="content">
-    <h1>{title}</h1>
+<Base title={title} description={description} path={path} jsonLd={jsonLd} current={current}>
+  <article class:list={["content", { "media-page": path === "/media-timeline/" }]}>
+    <h1 class="wordmark">Media<span class="wordmark-dim"> timeline</span></h1>
     <slot />
   </article>
 </Base>

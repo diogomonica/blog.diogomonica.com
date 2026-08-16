@@ -2,20 +2,42 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { DISPLAY } from "../lib/site";
-const posts = (await getCollection("posts")).sort((a, b) => b.data.date.localeCompare(a.data.date));
+import { buildStats } from "../lib/stats";
+
+const stats = buildStats(await getCollection("posts"));
+const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
 ---
-<Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/">
-  <h1>Archive</h1>
-  <ol class="post-list">
-    {posts.map((post) => {
-      const href = `/${post.data.date.replaceAll("-", "/")}/${post.data.slug}/`;
-      return (
-        <li>
-          <time datetime={post.data.date}>{post.data.date}</time>
-          {" — "}
-          <a href={href}>{post.data.title}</a>
-        </li>
-      );
-    })}
-  </ol>
+<Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/" current="archive">
+  <header class="page-head">
+    <h1 class="wordmark">All<span class="wordmark-dim"> posts</span></h1>
+    <p>{stats.total} essays, {stats.yearsActive}.</p>
+  </header>
+
+  {byYear.map((year) => (
+    <section class="archive-block" id={`y${year.year}`}>
+      <h2>{year.year} · {year.count}</h2>
+      <div class="table-wrap">
+        <table class="feed-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Title</th>
+              <th>Topics</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stats.posts.filter((post) => post.year === year.year).map((post) => (
+              <tr class="post-row">
+                <td class="col-date"><time datetime={post.date}>{post.date}</time></td>
+                <td class="col-title">
+                  <a href={post.href}>{post.title}</a>
+                </td>
+                <td class="col-topics">{post.tags.join(", ")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
 </Base>
