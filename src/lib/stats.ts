@@ -13,7 +13,6 @@ export type PostRow = {
 };
 
 export type YearCount = { year: string; count: number };
-export type TopicCount = { topic: string; count: number };
 
 export type ArchiveStats = {
   posts: PostRow[];
@@ -23,8 +22,6 @@ export type ArchiveStats = {
   lastDate: string;
   yearsActive: string;
   yearCounts: YearCount[];
-  topics: TopicCount[];
-  topicCount: number;
 };
 
 export function hrefFor(date: string, slug: string): string {
@@ -60,17 +57,6 @@ export function buildStats(entries: PostEntry[]): ArchiveStats {
     yearMap.set(post.year, (yearMap.get(post.year) ?? 0) + 1);
   }
 
-  const topicMap = new Map<string, number>();
-  for (const post of posts) {
-    for (const tag of post.tags) {
-      topicMap.set(tag, (topicMap.get(tag) ?? 0) + 1);
-    }
-  }
-
-  const topics = [...topicMap.entries()]
-    .map(([topic, count]) => ({ topic, count }))
-    .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic));
-
   return {
     posts,
     total: posts.length,
@@ -79,7 +65,5 @@ export function buildStats(entries: PostEntry[]): ArchiveStats {
     lastDate,
     yearsActive: `${firstYear}–${lastYear}`,
     yearCounts: [...yearMap.entries()].map(([year, count]) => ({ year, count })),
-    topics,
-    topicCount: topics.length,
   };
 }
