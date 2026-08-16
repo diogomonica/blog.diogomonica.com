@@ -31,22 +31,22 @@ export function yearBarsSvg(yearCounts: YearCount[]): string {
     .map((n) => {
       const y = pad.t + innerH - (n / yMax) * innerH;
       return `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y}" y2="${y}" stroke="${GRID}" stroke-width="1"/>
-        <text x="${pad.l - 6}" y="${y + 3}" fill="${AXIS}" font-size="10" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="end">${n}</text>`;
+        <text x="${pad.l - 6}" y="${y + 3}" fill="${AXIS}" font-size="11" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="end">${n}</text>`;
     })
     .join("");
 
   const bars = yearCounts
     .map((item, i) => {
-      const h = (item.count / yMax) * innerH;
-      const x = pad.l + i * (barW + gap) + gap / 2;
-      const y = pad.t + innerH - h;
+      const h = round((item.count / yMax) * innerH);
+      const x = round(pad.l + i * (barW + gap) + gap / 2);
+      const y = round(pad.t + innerH - h);
       const labelY = H - 10;
       const value = item.count
         ? `<text x="${x + barW / 2}" y="${y - 6}" fill="${ACCENT}" font-size="10" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="middle">${item.count}</text>`
         : "";
       return `<rect class="chart-bar" x="${x}" y="${y}" width="${barW}" height="${Math.max(h, 0)}" rx="2" fill="${ACCENT}" filter="url(#barGlow)"/>
         ${value}
-        <text x="${x + barW / 2}" y="${labelY}" fill="${AXIS}" font-size="10" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="middle">${item.year}</text>`;
+        <text x="${x + barW / 2}" y="${labelY}" fill="${AXIS}" font-size="11" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="middle">${item.year}</text>`;
     })
     .join("");
 
@@ -65,7 +65,7 @@ export function yearBarsSvg(yearCounts: YearCount[]): string {
 export function topicBarsSvg(topics: TopicCount[], limit = 8): string {
   const rows = topics.slice(0, limit);
   const W = 720;
-  const rowH = 26;
+  const rowH = 28;
   const pad = { t: 8, r: 48, b: 8, l: 108 };
   const H = pad.t + pad.b + rows.length * rowH;
   const innerW = W - pad.l - pad.r;
@@ -74,7 +74,7 @@ export function topicBarsSvg(topics: TopicCount[], limit = 8): string {
   const body = rows
     .map((item, i) => {
       const y = pad.t + i * rowH;
-      const w = Math.max(4, (item.count / max) * innerW);
+      const w = round(Math.max(4, (item.count / max) * innerW));
       return `<text x="${pad.l - 10}" y="${y + 14}" fill="${AXIS}" font-size="11" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="end">${escapeXml(item.topic)}</text>
         <rect x="${pad.l}" y="${y + 5}" width="${innerW}" height="12" rx="2" fill="${ACCENT_DIM}"/>
         <rect x="${pad.l}" y="${y + 5}" width="${w}" height="12" rx="2" fill="${ACCENT}" style="filter:drop-shadow(0 0 6px ${GLOW})"/>
@@ -88,4 +88,8 @@ export function topicBarsSvg(topics: TopicCount[], limit = 8): string {
 
 function escapeXml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function round(n: number): number {
+  return Math.round(n * 10) / 10;
 }
