@@ -9,7 +9,7 @@ deadImages: []
 canonical: "https://www.haun.co/writing/stablecoins-a-quiet-revolution"
 ---
 
-*This post originally appeared [here](https://www.haun.co/writing/stablecoins-a-quiet-revolution).*
+*This post originally appeared [here](https://www.haun.co/writing/stablecoins-a-quiet-revolution), co-authored with [Chris Ahn](https://www.haun.co/author/chris-ahn).*
 
 In the decade since the first stablecoin was minted, they have emerged as a potentially transformative force in global finance and—without a doubt—the clearest case of product-market fit within crypto.
 
