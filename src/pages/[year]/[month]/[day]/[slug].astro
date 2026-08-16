@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Base from "../../../../layouts/Base.astro";
+import RecordNav from "../../../../components/RecordNav.astro";
 import RecordRail from "../../../../components/RecordRail.astro";
 import { PERSON, PERSON_ID, SITE } from "../../../../lib/site";
 import { buildPostRecords } from "../../../../lib/posts";
@@ -43,9 +44,6 @@ const jsonLd = {
       date={post.data.date}
       tags={post.data.tags}
       readingTime={readingTime}
-      url={url}
-      prev={prev}
-      next={next}
     />
     <article class="read">
       <header>
@@ -54,6 +52,7 @@ const jsonLd = {
       <div class="content">
         <Content />
       </div>
+      <RecordNav url={url} prev={prev} next={next} />
     </article>
   </div>
 </Base>

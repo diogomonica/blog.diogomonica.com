@@ -1,16 +1,11 @@
 ---
-import type { RecordNeighbor } from "../lib/posts";
-
 interface Props {
   date: string;
   tags: string[];
   readingTime: string;
-  url: string;
-  prev: RecordNeighbor | null;
-  next: RecordNeighbor | null;
 }
 
-const { date, tags, readingTime, url, prev, next } = Astro.props;
+const { date, tags, readingTime } = Astro.props;
 const topics = tags.length > 0 ? tags.join(", ") : "—";
 ---
 <aside class="record-rail" aria-label="Record">
@@ -27,59 +22,5 @@ const topics = tags.length > 0 ? tags.join(", ") : "—";
       <dt>Read</dt>
       <dd>{readingTime}</dd>
     </div>
-    <div class="rail-item rail-copy">
-      <dt>Link</dt>
-      <dd>
-        <button type="button" class="copy-link" data-copy-link={url} aria-live="polite">
-          Copy link
-        </button>
-      </dd>
-    </div>
-    {prev && (
-      <div class="rail-item">
-        <dt>Previous</dt>
-        <dd>
-          <a href={prev.href}>{prev.title}</a>
-          <time class="rail-neighbor-date" datetime={prev.date}>{prev.date}</time>
-        </dd>
-      </div>
-    )}
-    {next && (
-      <div class="rail-item">
-        <dt>Next</dt>
-        <dd>
-          <a href={next.href}>{next.title}</a>
-          <time class="rail-neighbor-date" datetime={next.date}>{next.date}</time>
-        </dd>
-      </div>
-    )}
   </dl>
 </aside>
-<script>
-  const button = document.querySelector("[data-copy-link]");
-  if (button instanceof HTMLButtonElement) {
-    const url = button.dataset.copyLink ?? "";
-    const idle = "Copy link";
-    let timer = 0;
-    button.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(url);
-      } catch {
-        const field = document.createElement("textarea");
-        field.value = url;
-        field.setAttribute("readonly", "");
-        field.style.position = "fixed";
-        field.style.left = "-9999px";
-        document.body.appendChild(field);
-        field.select();
-        document.execCommand("copy");
-        field.remove();
-      }
-      button.textContent = "Copied";
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => {
-        button.textContent = idle;
-      }, 1600);
-    });
-  }
-</script>
