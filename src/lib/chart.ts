@@ -1,89 +1,63 @@
-import type { TopicCount, YearCount } from "./stats";
+const INK = "currentColor";
+const MUTED = "var(--muted)";
 
-const ACCENT = "var(--accent)";
-const ACCENT_DIM = "var(--accent-dim)";
-const GRID = "var(--line)";
-const AXIS = "var(--muted)";
-const GLOW = "var(--accent-glow)";
+export function histogramSvg(values: number[], label: string): string {
+  const W = 240;
+  const H = 36;
+  const max = Math.max(...values, 1);
+  const gap = 2;
+  const barW = Math.max(1.5, (W - gap * (values.length - 1)) / values.length);
 
-function ticks(max: number): number[] {
-  if (max <= 4) return [0, 1, 2, 3, 4].filter((n) => n <= Math.max(max, 1));
-  const step = max <= 8 ? 2 : 5;
-  const top = Math.ceil(max / step) * step;
-  const out: number[] = [];
-  for (let n = 0; n <= top; n += step) out.push(n);
-  return out;
+  const bars = values
+    .map((n, i) => {
+      const h = Math.max(1.5, (n / max) * (H - 1));
+      const x = round(i * (barW + gap));
+      const y = round(H - h);
+      return `<rect x="${x}" y="${y}" width="${round(barW)}" height="${round(h)}" fill="${INK}" opacity="${n ? 0.85 : 0.22}"/>`;
+    })
+    .join("");
+
+  return `<svg class="hist-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeXml(label)}">${bars}</svg>`;
 }
 
-export function yearBarsSvg(yearCounts: YearCount[]): string {
+export function sparklineSvg(values: number[], label: string): string {
+  const W = 88;
+  const H = 28;
+  const pad = 1;
+  const max = Math.max(...values, 1);
+  const step = values.length > 1 ? (W - pad * 2) / (values.length - 1) : 0;
+  const points = values
+    .map((n, i) => {
+      const x = round(pad + i * step);
+      const y = round(H - pad - (n / max) * (H - pad * 2));
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return `<svg class="spark-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeXml(label)}"><polyline fill="none" stroke="${INK}" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" points="${points}"/></svg>`;
+}
+
+export function yearBarsSvg(values: { year: string; count: number }[]): string {
   const W = 720;
-  const H = 220;
-  const pad = { t: 22, r: 12, b: 32, l: 28 };
+  const H = 160;
+  const pad = { t: 8, r: 4, b: 22, l: 4 };
   const innerW = W - pad.l - pad.r;
   const innerH = H - pad.t - pad.b;
-  const max = Math.max(...yearCounts.map((y) => y.count), 1);
-  const yTicks = ticks(max);
-  const yMax = yTicks[yTicks.length - 1] ?? max;
-  const gap = 10;
-  const barW = Math.max(8, (innerW - gap * yearCounts.length) / yearCounts.length);
+  const max = Math.max(...values.map((v) => v.count), 1);
+  const gap = 8;
+  const barW = Math.max(6, (innerW - gap * (values.length - 1)) / values.length);
 
-  const grid = yTicks
-    .map((n) => {
-      const y = pad.t + innerH - (n / yMax) * innerH;
-      return `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y}" y2="${y}" stroke="${GRID}" stroke-width="1"/>
-        <text x="${pad.l - 6}" y="${y + 3}" fill="${AXIS}" font-size="11" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="end">${n}</text>`;
-    })
-    .join("");
-
-  const bars = yearCounts
+  const bars = values
     .map((item, i) => {
-      const h = round((item.count / yMax) * innerH);
-      const x = round(pad.l + i * (barW + gap) + gap / 2);
+      const h = round((item.count / max) * innerH);
+      const x = round(pad.l + i * (barW + gap));
       const y = round(pad.t + innerH - h);
-      const labelY = H - 10;
-      const value = item.count
-        ? `<text x="${x + barW / 2}" y="${y - 6}" fill="${ACCENT}" font-size="10" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="middle">${item.count}</text>`
-        : "";
-      return `<rect class="chart-bar" x="${x}" y="${y}" width="${barW}" height="${Math.max(h, 0)}" rx="2" fill="${ACCENT}" filter="url(#barGlow)"/>
-        ${value}
-        <text x="${x + barW / 2}" y="${labelY}" fill="${AXIS}" font-size="11" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="middle">${item.year}</text>`;
+      return `<rect x="${x}" y="${y}" width="${round(barW)}" height="${Math.max(h, 1.5)}" fill="${INK}" opacity="0.9"/>
+        <text x="${round(x + barW / 2)}" y="${H - 6}" fill="${MUTED}" font-size="11" font-family="Geist Sans, ui-sans-serif, sans-serif" text-anchor="middle">${item.year}</text>`;
     })
     .join("");
 
-  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Posts published per year from ${yearCounts[0]?.year ?? ""} to ${yearCounts[yearCounts.length - 1]?.year ?? ""}">
-    <defs>
-      <filter id="barGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="1.6" result="b"/>
-        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    ${grid}
-    ${bars}
-  </svg>`;
-}
-
-export function topicBarsSvg(topics: TopicCount[], limit = 8): string {
-  const rows = topics.slice(0, limit);
-  const W = 720;
-  const rowH = 28;
-  const pad = { t: 8, r: 48, b: 8, l: 108 };
-  const H = pad.t + pad.b + rows.length * rowH;
-  const innerW = W - pad.l - pad.r;
-  const max = Math.max(...rows.map((t) => t.count), 1);
-
-  const body = rows
-    .map((item, i) => {
-      const y = pad.t + i * rowH;
-      const w = round(Math.max(4, (item.count / max) * innerW));
-      return `<text x="${pad.l - 10}" y="${y + 14}" fill="${AXIS}" font-size="11" font-family="IBM Plex Mono, ui-monospace, monospace" text-anchor="end">${escapeXml(item.topic)}</text>
-        <rect x="${pad.l}" y="${y + 5}" width="${innerW}" height="12" rx="2" fill="${ACCENT_DIM}"/>
-        <rect x="${pad.l}" y="${y + 5}" width="${w}" height="12" rx="2" fill="${ACCENT}" style="filter:drop-shadow(0 0 6px ${GLOW})"/>
-        <text x="${pad.l + w + 8}" y="${y + 15}" fill="${AXIS}" font-size="10" font-family="IBM Plex Mono, ui-monospace, monospace">${item.count}</text>`;
-    })
-    .join("");
-
-  const names = rows.map((t) => t.topic).join(", ");
-  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Most used topics: ${escapeXml(names)}">${body}</svg>`;
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Posts published per year from ${values[0]?.year ?? ""} to ${values[values.length - 1]?.year ?? ""}">${bars}</svg>`;
 }
 
 function escapeXml(s: string): string {

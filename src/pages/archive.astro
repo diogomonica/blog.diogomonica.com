@@ -2,16 +2,22 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { DISPLAY } from "../lib/site";
-import { buildStats } from "../lib/stats";
+import { buildStats, monthWindow } from "../lib/stats";
+import { sparklineSvg } from "../lib/chart";
 
 const stats = buildStats(await getCollection("posts"));
 const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
+const sparks = Object.fromEntries(
+  stats.posts.map((post) => [
+    post.date + post.slug,
+    sparklineSvg(monthWindow(stats.posts, post.date), `Post activity around ${post.date}`),
+  ]),
+);
 ---
 <Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/" current="archive">
   <header class="page-head">
-    <p class="kicker">Archive</p>
-    <h1>All posts</h1>
-    <p>{stats.total} essays, {stats.yearsActive}. Same URLs as the original Ghost archive.</p>
+    <h1 class="wordmark">All<span class="wordmark-dim"> posts</span></h1>
+    <p>{stats.total} essays, {stats.yearsActive}.</p>
   </header>
 
   {byYear.map((year) => (
@@ -23,6 +29,7 @@ const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
             <tr>
               <th>Date</th>
               <th>Title</th>
+              <th>Signal</th>
               <th>Topics</th>
             </tr>
           </thead>
@@ -33,9 +40,10 @@ const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
                 <td class="col-title">
                   <a href={post.href}>{post.title}</a>
                 </td>
-                <td class="col-topics">
-                  {post.tags.map((tag) => <span class="topic-chip">{tag}</span>)}
+                <td class="col-spark">
+                  <Fragment set:html={sparks[post.date + post.slug]} />
                 </td>
+                <td class="col-topics">{post.tags.join(", ")}</td>
               </tr>
             ))}
           </tbody>

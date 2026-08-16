@@ -1,9 +1,8 @@
 ---
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/500.css";
-import "@fontsource/ibm-plex-sans/600.css";
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource/ibm-plex-mono/500.css";
+import "@fontsource/geist-sans/400.css";
+import "@fontsource/geist-sans/500.css";
+import "@fontsource/geist-sans/600.css";
+import "@fontsource/geist-sans/700.css";
 import "../styles/global.css";
 import { SITE, DISPLAY, SAME_AS } from "../lib/site";
 
@@ -27,10 +26,10 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#07080a" />
+  <meta name="theme-color" content="#0d0d0d" />
   <style is:inline>
-    html{background:#07080a;color-scheme:dark}
-    html[data-theme="light"]{background:#f4f1e8;color-scheme:light}
+    html{background:#0d0d0d;color-scheme:dark}
+    html[data-theme="light"]{background:#f4f4f4;color-scheme:light}
   </style>
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
@@ -66,15 +65,13 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <header class="site-header">
     <div class="wrap">
       <a class="brand" href="/">
-        <span class="brand-mark">DM</span>
-        <span class="brand-name">{DISPLAY}</span>
-        <span class="brand-sub">Signal</span>
+        <span class="brand-name">Diogo</span><span class="brand-sub"> Mónica</span>
       </a>
       <nav class="top-nav" aria-label="Site">
         <a href="/" aria-current={current === "home" ? "page" : undefined}>Posts</a>
         <a href="/archive/" aria-current={current === "archive" ? "page" : undefined}>Archive</a>
         <a href="/media-timeline/" aria-current={current === "media" ? "page" : undefined}>Media</a>
-        <a href="/rss.xml">RSS</a>
+        <a class="nav-primary" href="/rss.xml">RSS</a>
       </nav>
       <div class="header-tools">
         <p class="status"><span class="status-dot" aria-hidden="true"></span> Archive</p>

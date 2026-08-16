@@ -2,14 +2,22 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { SITE, DISPLAY, BIO, SAME_AS } from "../lib/site";
-import { buildStats } from "../lib/stats";
-import { yearBarsSvg, topicBarsSvg } from "../lib/chart";
+import { buildStats, monthWindow } from "../lib/stats";
+import { histogramSvg, sparklineSvg } from "../lib/chart";
 
 const stats = buildStats(await getCollection("posts"));
 const featuredDates = new Set(stats.posts.slice(0, 8).map((p) => p.date + p.slug));
 const years = stats.yearCounts.map((y) => y.year);
-const yearSvg = yearBarsSvg(stats.yearCounts);
-const topicSvg = topicBarsSvg(stats.topics, 8);
+const postsHist = histogramSvg(stats.yearActivity, `Posts per year, ${stats.firstYear} to ${stats.lastYear}`);
+const rangeHist = histogramSvg(stats.yearActivity.map((n) => (n > 0 ? 1 : 0)), `Years with posts, ${stats.firstYear} to ${stats.lastYear}`);
+const lastHist = histogramSvg(stats.cumulativeByYear, "Cumulative posts by year");
+const topicHist = histogramSvg(stats.topicCounts, "Top topic counts");
+const sparks = Object.fromEntries(
+  stats.posts.map((post) => [
+    post.date + post.slug,
+    sparklineSvg(monthWindow(stats.posts, post.date), `Post activity around ${post.date}`),
+  ]),
+);
 
 const person = {
   "@type": "Person",
@@ -27,8 +35,7 @@ const person = {
 const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": SITE + "/#person" } }] };
 ---
 <Base title={DISPLAY} description={BIO} path="/" jsonLd={jsonLd} current="home">
-  <p class="kicker">Signal</p>
-  <h1>{DISPLAY}</h1>
+  <h1 class="wordmark">Diogo<span class="wordmark-dim"> Mónica</span></h1>
   <p class="bio">{BIO}</p>
   <p class="identity-links">
     <a href="https://diogomonica.com">diogomonica.com</a>
@@ -36,50 +43,34 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
     <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
   </p>
 
+  <p class="section-label">Archive</p>
   <section class="stat-strip" aria-label="Archive stats">
     <article class="stat-card">
       <span class="stat-label">Posts</span>
       <span class="stat-value">{stats.total}</span>
-      <span class="stat-hint">Static collection</span>
+      <Fragment set:html={postsHist} />
     </article>
     <article class="stat-card">
       <span class="stat-label">Active</span>
       <span class="stat-value">{stats.yearsActive}</span>
-      <span class="stat-hint">Writing years</span>
+      <Fragment set:html={rangeHist} />
     </article>
     <article class="stat-card">
       <span class="stat-label">Last post</span>
       <span class="stat-value">{stats.lastDate}</span>
-      <span class="stat-hint">Archive closed</span>
+      <Fragment set:html={lastHist} />
     </article>
     <article class="stat-card">
       <span class="stat-label">Topics</span>
       <span class="stat-value">{stats.topicCount}</span>
-      <span class="stat-hint">From post tags</span>
-    </article>
-  </section>
-
-  <section class="panel-grid" aria-label="Archive graphs">
-    <article class="panel">
-      <div class="panel-head">
-        <h2>Posts / year</h2>
-        <span class="panel-meta">{stats.firstYear}–{stats.lastYear}</span>
-      </div>
-      <Fragment set:html={yearSvg} />
-    </article>
-    <article class="panel">
-      <div class="panel-head">
-        <h2>Topic mix</h2>
-        <span class="panel-meta">Top {Math.min(8, stats.topics.length)}</span>
-      </div>
-      <Fragment set:html={topicSvg} />
+      <Fragment set:html={topicHist} />
     </article>
   </section>
 
   <section class="feed" aria-label="Posts">
-    <div class="panel-head">
-      <h2>Feed</h2>
-      <a class="panel-meta" href="/archive/">Full archive</a>
+    <div class="feed-head">
+      <h2>Posts</h2>
+      <a href="/archive/">All {stats.total}</a>
     </div>
     <input class="feed-ctrl" type="radio" name="feed" id="feed-featured" checked />
     <input class="feed-ctrl" type="radio" name="feed" id="feed-all" />
@@ -95,6 +86,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
           <tr>
             <th>Date</th>
             <th>Title</th>
+            <th>Signal</th>
             <th>Topics</th>
           </tr>
         </thead>
@@ -106,9 +98,10 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
                 <a href={post.href}>{post.title}</a>
                 {post.description && <p>{post.description}</p>}
               </td>
-              <td class="col-topics">
-                {post.tags.map((tag) => <span class="topic-chip">{tag}</span>)}
+              <td class="col-spark">
+                <Fragment set:html={sparks[post.date + post.slug]} />
               </td>
+              <td class="col-topics">{post.tags.join(", ")}</td>
             </tr>
           ))}
         </tbody>
