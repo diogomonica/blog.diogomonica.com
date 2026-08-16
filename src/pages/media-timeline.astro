@@ -1,0 +1,46 @@
+---
+import Page from "../layouts/Page.astro";
+import { readPublicImageSize } from "../lib/image-size";
+import { loadMediaTimeline } from "../lib/media";
+
+const title = "Media Timeline";
+const description = "A timeline of noteworthy articles, videos and media appearances.";
+const path = "/media-timeline/";
+
+const items = loadMediaTimeline().map((item, index) => ({
+  ...item,
+  ...readPublicImageSize(item.image),
+  loading: index < 2 ? "eager" : "lazy",
+}));
+
+const groups: { year: string; items: typeof items }[] = [];
+for (const item of items) {
+  const last = groups.at(-1);
+  if (!last || last.year !== item.year) groups.push({ year: item.year, items: [item] });
+  else last.items.push(item);
+}
+---
+<Page title={title} description={description} path={path}>
+  {groups.map((group) => (
+    <>
+      <h3>{group.year}</h3>
+      {group.items.map((item) => (
+        <>
+          <h6>{item.title}</h6>
+          <p>
+            <a href={item.href}>
+              <img
+                src={item.image}
+                alt=""
+                width={item.width}
+                height={item.height}
+                loading={item.loading}
+                decoding="async"
+              />
+            </a>
+          </p>
+        </>
+      ))}
+    </>
+  ))}
+</Page>

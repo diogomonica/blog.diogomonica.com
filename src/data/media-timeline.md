@@ -1,10 +1,3 @@
----
-layout: ../layouts/Page.astro
-title: "Media Timeline"
-description: "A timeline of noteworthy articles, videos and media appearances."
-permalink: "/media-timeline/"
-deadImages: []
----
 ### 2026
 
 ###### Talking Tokens: Palmer Luckey Just Built a Bank for Crypto, AI, and Defense
