@@ -10,34 +10,27 @@ interface Props {
 const { url, prev, next } = Astro.props;
 ---
 <nav class="record-nav" aria-label="Record">
-  <dl class="rail-list">
-    <div class="rail-item rail-copy">
-      <dt>Link</dt>
-      <dd>
-        <button type="button" class="copy-link" data-copy-link={url} aria-live="polite">
-          Copy link
-        </button>
-      </dd>
+  <div class="record-nav-copy">
+    <button type="button" class="copy-link" data-copy-link={url} aria-live="polite">
+      Copy link
+    </button>
+  </div>
+  {(prev || next) && (
+    <div class="record-nav-row">
+      {prev && (
+        <a class="record-nav-btn record-nav-prev" href={prev.href}>
+          <span class="record-nav-label">← Previous</span>
+          <span class="record-nav-title">{prev.title}</span>
+        </a>
+      )}
+      {next && (
+        <a class="record-nav-btn record-nav-next" href={next.href}>
+          <span class="record-nav-label">Next →</span>
+          <span class="record-nav-title">{next.title}</span>
+        </a>
+      )}
     </div>
-    {prev && (
-      <div class="rail-item">
-        <dt>Previous</dt>
-        <dd>
-          <a href={prev.href}>{prev.title}</a>
-          <time class="rail-neighbor-date" datetime={prev.date}>{prev.date}</time>
-        </dd>
-      </div>
-    )}
-    {next && (
-      <div class="rail-item">
-        <dt>Next</dt>
-        <dd>
-          <a href={next.href}>{next.title}</a>
-          <time class="rail-neighbor-date" datetime={next.date}>{next.date}</time>
-        </dd>
-      </div>
-    )}
-  </dl>
+  )}
 </nav>
 <script>
   const button = document.querySelector("[data-copy-link]");
