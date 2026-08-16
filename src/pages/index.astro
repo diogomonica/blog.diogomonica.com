@@ -3,10 +3,12 @@ import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { SITE, DISPLAY, BIO, SAME_AS } from "../lib/site";
 import { buildStats } from "../lib/stats";
+import { loadHomepageMedia } from "../lib/media";
 
 const stats = buildStats(await getCollection("posts"));
 const featuredDates = new Set(stats.posts.slice(0, 8).map((p) => p.date + p.slug));
 const years = stats.yearCounts.map((y) => y.year);
+const media = loadHomepageMedia();
 
 const person = {
   "@type": "Person",
@@ -66,12 +68,12 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
       {years.map((year) => <label for={`feed-${year}`}>{year}</label>)}
     </div>
     <div class="table-wrap">
-      <table class="feed-table">
+      <table class="feed-table posts-table">
         <thead>
           <tr>
             <th>Date</th>
             <th>Title</th>
-            <th>Topics</th>
+            <th class="col-topics">Topics</th>
           </tr>
         </thead>
         <tbody>
@@ -83,6 +85,37 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
                 {post.description && <p>{post.description}</p>}
               </td>
               <td class="col-topics">{post.tags.join(", ")}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="feed latest-media" aria-label="Latest Media">
+    <div class="feed-head">
+      <h2>Latest Media</h2>
+      <a href="/media-timeline/">All {media.total}</a>
+    </div>
+    <div class="table-wrap">
+      <table class="feed-table media-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th></th>
+            <th>Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          {media.latest.map((item) => (
+            <tr class="media-row">
+              <td class="col-date"><time datetime={item.date}>{item.date}</time></td>
+              <td class="col-thumb">
+                <img class="media-thumb" src={item.image} alt="" width="40" height="23" loading="lazy" decoding="async" />
+              </td>
+              <td class="col-title">
+                <a href={item.href}>{item.title}</a>
+              </td>
             </tr>
           ))}
         </tbody>
