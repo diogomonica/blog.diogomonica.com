@@ -17,6 +17,47 @@ export const SAME_AS = [
   'https://www.haun.co/team/diogo-monica',
 ];
 export const PERSON_ID = `${APEX}/#person`;
+export const IST = {
+  '@type': 'CollegeOrUniversity',
+  name: 'Instituto Superior Técnico',
+  url: 'https://tecnico.ulisboa.pt/',
+  parentOrganization: {
+    '@type': 'CollegeOrUniversity',
+    name: 'University of Lisbon',
+  },
+};
+export const DEGREES = [
+  {
+    years: '2004–2007',
+    line: 'BSc, Telecommunications and Informatics Engineering, Instituto Superior Técnico, University of Lisbon.',
+    credential: {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'BSc, Telecommunications and Informatics Engineering',
+      credentialCategory: 'bachelor degree',
+      recognizedBy: IST,
+    },
+  },
+  {
+    years: '2007–2009',
+    line: 'MSc, Communication Networks Engineering, Instituto Superior Técnico, University of Lisbon.',
+    credential: {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'MSc, Communication Networks Engineering',
+      credentialCategory: 'master degree',
+      recognizedBy: IST,
+    },
+  },
+  {
+    years: '2009–2015',
+    line: 'PhD, Computer Science (network security), Instituto Superior Técnico, University of Lisbon.',
+    credential: {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'PhD, Computer Science (network security)',
+      credentialCategory: 'doctorate',
+      recognizedBy: IST,
+    },
+  },
+];
 export const PERSON = {
   '@type': 'Person',
   '@id': PERSON_ID,
@@ -31,6 +72,9 @@ export const PERSON = {
     propertyID: 'Google Knowledge Graph ID',
     value: '/g/11q96pmchp',
   },
+  alumniOf: IST,
+  hasCredential: DEGREES.map((degree) => degree.credential),
+  image: `${SITE}/media-kit/Diogo_Monica_Founder_Engineer.web.jpg`,
   knowsAbout: [
     'security engineering',
     'digital-asset custody',

@@ -1,6 +1,14 @@
 ---
+import CopyText from "../components/CopyText.astro";
 import Base from "../layouts/Base.astro";
-import { APEX, BIO, DISPLAY, PERSON, PERSON_ID, SITE } from "../lib/site";
+import { readPublicImageSize } from "../lib/image-size";
+import { LONG_BIO, MEDIA_KIT_PHOTOS, MEDIA_KIT_USAGE, SHORT_BIO } from "../lib/media-kit";
+import { APEX, BIO, DEGREES, DISPLAY, PERSON, PERSON_ID, SITE } from "../lib/site";
+
+const photos = MEDIA_KIT_PHOTOS.map((photo) => ({
+  ...photo,
+  size: readPublicImageSize(photo.web),
+}));
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -29,7 +37,7 @@ const jsonLd = {
 
     <p>
       Earlier he led security at Docker and platform security at Square (now Block).
-      He holds a PhD in computer science from Instituto Superior Técnico at the University of Lisbon.
+      He holds BSc, MSc, and PhD degrees from Instituto Superior Técnico at the University of Lisbon.
     </p>
 
     <h2>Roles</h2>
@@ -43,6 +51,59 @@ const jsonLd = {
       <li>2024–present — General Partner, Haun Ventures.</li>
       <li>Chairman, NEAR Foundation.</li>
       <li>2026–present — Director, Erebor.</li>
+    </ul>
+
+    <h3>Education</h3>
+    <ul>
+      {DEGREES.map((degree) => (
+        <li>{degree.years} — {degree.line}</li>
+      ))}
+    </ul>
+
+    <h2 id="media-kit">Media kit</h2>
+    <p>{MEDIA_KIT_USAGE}</p>
+
+    <div class="kit-bio">
+      <div class="kit-bio-head">
+        <h3>Short bio</h3>
+        <CopyText target="#short-bio" />
+      </div>
+      <p id="short-bio">{SHORT_BIO}</p>
+    </div>
+
+    <div class="kit-bio">
+      <div class="kit-bio-head">
+        <h3>Long bio</h3>
+        <CopyText target="#long-bio" />
+      </div>
+      <div id="long-bio">
+        {LONG_BIO.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+
+    <h3>Pictures</h3>
+    <ul class="kit-photos">
+      {photos.map((photo) => (
+        <li>
+          <img
+            src={photo.web}
+            alt={photo.alt}
+            width={photo.size.width}
+            height={photo.size.height}
+            loading="lazy"
+            decoding="async"
+          />
+          <p class="kit-photo-links">
+            <a href={photo.original} download={photo.downloadName}>Original</a>
+            <a href={photo.web} download={photo.webDownloadName}>Web JPEG</a>
+          </p>
+          <p class="kit-photo-credit">
+            Photo: {photo.photographer}.
+            <a href={photo.licenseHref}>{photo.license}</a>.
+            <a href={photo.commonsHref}>Wikimedia Commons</a>.
+          </p>
+        </li>
+      ))}
     </ul>
 
     <h2>Links</h2>

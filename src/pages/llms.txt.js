@@ -35,6 +35,7 @@ export async function GET() {
     "- Name: " + DISPLAY,
     "- alternateName: " + NAME,
     "- Roles: " + ROLES.join("; "),
+    "- Education: BSc, MSc, and PhD, Instituto Superior Técnico, University of Lisbon. Press media kit: " + SITE + "/about/#media-kit",
     "- About: " + SITE + "/about/",
     "- Home: " + SITE + "/",
     "- Media: " + SITE + "/media-timeline/",
