@@ -2,8 +2,15 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { SITE, DISPLAY, BIO, SAME_AS } from "../lib/site";
-const posts = (await getCollection("posts")).sort((a, b) => b.data.date.localeCompare(a.data.date));
-const latest = posts.slice(0, 8);
+import { buildStats } from "../lib/stats";
+import { yearBarsSvg, topicBarsSvg } from "../lib/chart";
+
+const stats = buildStats(await getCollection("posts"));
+const featuredDates = new Set(stats.posts.slice(0, 8).map((p) => p.date + p.slug));
+const years = stats.yearCounts.map((y) => y.year);
+const yearSvg = yearBarsSvg(stats.yearCounts);
+const topicSvg = topicBarsSvg(stats.topics, 8);
+
 const person = {
   "@type": "Person",
   "@id": SITE + "/#person",
@@ -19,23 +26,93 @@ const person = {
 };
 const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": SITE + "/#person" } }] };
 ---
-<Base title={DISPLAY} description={BIO} path="/" jsonLd={jsonLd}>
+<Base title={DISPLAY} description={BIO} path="/" jsonLd={jsonLd} current="home">
+  <p class="kicker">Signal</p>
   <h1>{DISPLAY}</h1>
   <p class="bio">{BIO}</p>
-  <p><a href="https://diogomonica.com">diogomonica.com</a> · <a rel="me" href="https://x.com/diogomonica">@diogomonica</a> · <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a></p>
-  <h2>Latest posts</h2>
-  <ol class="post-list">
-    {latest.map((post) => {
-      const href = `/${post.data.date.replaceAll("-", "/")}/${post.data.slug}/`;
-      return (
-        <li>
-          <time datetime={post.data.date}>{post.data.date}</time>
-          <br />
-          <a href={href}>{post.data.title}</a>
-          {post.data.description && <p class="muted">{post.data.description}</p>}
-        </li>
-      );
-    })}
-  </ol>
-  <p><a href="/archive/">All posts</a></p>
+  <p class="identity-links">
+    <a href="https://diogomonica.com">diogomonica.com</a>
+    <a rel="me" href="https://x.com/diogomonica">@diogomonica</a>
+    <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
+  </p>
+
+  <section class="stat-strip" aria-label="Archive stats">
+    <article class="stat-card">
+      <span class="stat-label">Posts</span>
+      <span class="stat-value">{stats.total}</span>
+      <span class="stat-hint">Static collection</span>
+    </article>
+    <article class="stat-card">
+      <span class="stat-label">Active</span>
+      <span class="stat-value">{stats.yearsActive}</span>
+      <span class="stat-hint">Writing years</span>
+    </article>
+    <article class="stat-card">
+      <span class="stat-label">Last post</span>
+      <span class="stat-value">{stats.lastDate}</span>
+      <span class="stat-hint">Archive closed</span>
+    </article>
+    <article class="stat-card">
+      <span class="stat-label">Topics</span>
+      <span class="stat-value">{stats.topicCount}</span>
+      <span class="stat-hint">From post tags</span>
+    </article>
+  </section>
+
+  <section class="panel-grid" aria-label="Archive graphs">
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Posts / year</h2>
+        <span class="panel-meta">{stats.firstYear}–{stats.lastYear}</span>
+      </div>
+      <Fragment set:html={yearSvg} />
+    </article>
+    <article class="panel">
+      <div class="panel-head">
+        <h2>Topic mix</h2>
+        <span class="panel-meta">Top {Math.min(8, stats.topics.length)}</span>
+      </div>
+      <Fragment set:html={topicSvg} />
+    </article>
+  </section>
+
+  <section class="feed" aria-label="Posts">
+    <div class="panel-head">
+      <h2>Feed</h2>
+      <a class="panel-meta" href="/archive/">Full archive</a>
+    </div>
+    <input class="feed-ctrl" type="radio" name="feed" id="feed-featured" checked />
+    <input class="feed-ctrl" type="radio" name="feed" id="feed-all" />
+    {years.map((year) => <input class="feed-ctrl" type="radio" name="feed" id={`feed-${year}`} />)}
+    <div class="chips">
+      <label for="feed-featured">Featured</label>
+      <label for="feed-all">All</label>
+      {years.map((year) => <label for={`feed-${year}`}>{year}</label>)}
+    </div>
+    <div class="table-wrap">
+      <table class="feed-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Topics</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stats.posts.map((post) => (
+            <tr class="post-row" data-year={post.year} data-featured={featuredDates.has(post.date + post.slug) || undefined}>
+              <td class="col-date"><time datetime={post.date}>{post.date}</time></td>
+              <td class="col-title">
+                <a href={post.href}>{post.title}</a>
+                {post.description && <p>{post.description}</p>}
+              </td>
+              <td class="col-topics">
+                {post.tags.map((tag) => <span class="topic-chip">{tag}</span>)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
 </Base>

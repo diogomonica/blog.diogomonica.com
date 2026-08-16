@@ -2,7 +2,13 @@
 import Base from "../layouts/Base.astro";
 ---
 <Base title="Not found" description="This page does not exist." path="/404/">
-  <h1>Not found</h1>
-  <p class="muted">That URL is not on this site.</p>
-  <p><a href="/">Home</a> · <a href="/archive/">Archive</a></p>
+  <section class="lost">
+    <p class="lost-code">404 · Signal lost</p>
+    <h1>Not found</h1>
+    <p>That URL is not on this site. The archive is static: posts live at /YYYY/MM/DD/slug/.</p>
+    <p class="lost-links">
+      <a href="/">Home</a>
+      <a href="/archive/">Archive</a>
+    </p>
+  </section>
 </Base>

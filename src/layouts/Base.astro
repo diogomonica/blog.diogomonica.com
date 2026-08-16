@@ -1,17 +1,37 @@
 ---
+import "@fontsource/ibm-plex-sans/400.css";
+import "@fontsource/ibm-plex-sans/500.css";
+import "@fontsource/ibm-plex-sans/600.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 import "../styles/global.css";
 import { SITE, DISPLAY, SAME_AS } from "../lib/site";
-interface Props { title: string; description: string; path: string; ogType?: string; jsonLd?: object; image?: string; }
-const { title, description, path, ogType = "website", jsonLd, image } = Astro.props;
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  ogType?: string;
+  jsonLd?: object;
+  image?: string;
+  current?: "home" | "archive" | "media";
+}
+const { title, description, path, ogType = "website", jsonLd, image, current } = Astro.props;
 const url = new URL(path, SITE).href;
 const ogImage = image ? new URL(image, SITE).href : new URL("/favicon.png", SITE).href;
-const pageTitle = path === "/" ? `${DISPLAY}` : `${title} · ${DISPLAY}`;
+const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#07080a" />
+  <style is:inline>
+    html{background:#07080a;color-scheme:dark}
+    html[data-theme="light"]{background:#f4f1e8;color-scheme:light}
+  </style>
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={url} />
@@ -30,27 +50,64 @@ const pageTitle = path === "/" ? `${DISPLAY}` : `${title} · ${DISPLAY}`;
   <meta name="twitter:image" content={ogImage} />
   {SAME_AS.map((href) => <link rel="me" href={href} />)}
   {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  <script is:inline>
+    (function () {
+      try {
+        var stored = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", stored === "light" ? "light" : "dark");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
 </head>
 <body>
-  <header class="site-header"><div class="wrap">
-    <a class="brand" href="/">{DISPLAY}</a>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/archive/">Archive</a>
-      <a href="/media-timeline/">Media</a>
-      <a href="/rss.xml">RSS</a>
-    </nav>
-  </div></header>
-  <main class="wrap"><slot /></main>
-  <footer class="site-footer"><div class="wrap">
-    <span>© {DISPLAY}</span>
-    <nav>
-      <a href="https://diogomonica.com">diogomonica.com</a>
-      <a rel="me" href="https://x.com/diogomonica">X</a>
-      <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
-      <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
-      <a rel="me" href="https://www.wikidata.org/wiki/Q111948997">Wikidata</a>
-    </nav>
-  </div></footer>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <span class="brand-mark">DM</span>
+        <span class="brand-name">{DISPLAY}</span>
+        <span class="brand-sub">Signal</span>
+      </a>
+      <nav class="top-nav" aria-label="Site">
+        <a href="/" aria-current={current === "home" ? "page" : undefined}>Posts</a>
+        <a href="/archive/" aria-current={current === "archive" ? "page" : undefined}>Archive</a>
+        <a href="/media-timeline/" aria-current={current === "media" ? "page" : undefined}>Media</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
+      <div class="header-tools">
+        <p class="status"><span class="status-dot" aria-hidden="true"></span> Archive</p>
+        <button class="theme-toggle" type="button" data-theme-toggle>Light</button>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="wrap"><slot /></main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© {DISPLAY}</span>
+      <nav aria-label="Identity">
+        <a href="https://diogomonica.com">diogomonica.com</a>
+        <a rel="me" href="https://x.com/diogomonica">@diogomonica</a>
+        <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
+        <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
+        <a rel="me" href="https://www.wikidata.org/wiki/Q111948997">Wikidata</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    const root = document.documentElement;
+    const button = document.querySelector("[data-theme-toggle]");
+    const label = () => (root.getAttribute("data-theme") === "light" ? "Dark" : "Light");
+    if (button) {
+      button.textContent = label();
+      button.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch {}
+        button.textContent = label();
+      });
+    }
+  </script>
 </body>
 </html>
