@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
-import { SITE, DISPLAY, BIO, SAME_AS } from "../lib/site";
+import { DISPLAY, BIO, PERSON, PERSON_ID, SITE } from "../lib/site";
 import { buildStats } from "../lib/stats";
 import { loadHomepageMedia } from "../lib/media";
 
@@ -10,20 +10,7 @@ const featuredDates = new Set(stats.posts.slice(0, 8).map((p) => p.date + p.slug
 const years = stats.yearCounts.map((y) => y.year);
 const media = loadHomepageMedia();
 
-const person = {
-  "@type": "Person",
-  "@id": SITE + "/#person",
-  "name": DISPLAY,
-  "alternateName": "Diogo Monica",
-  "url": "https://diogomonica.com",
-  "sameAs": SAME_AS,
-  "jobTitle": [
-    "General Partner, Haun Ventures",
-    "Co-founder and Executive Chairman, Anchorage Digital",
-    "Chairman, NEAR Foundation",
-  ],
-};
-const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": SITE + "/#person" } }] };
+const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": PERSON_ID } }] };
 ---
 <Base title={DISPLAY} description={BIO} path="/" jsonLd={jsonLd} current="home">
   <h1 class="wordmark">Diogo<span class="wordmark-dim"> Mónica</span></h1>

@@ -1,6 +1,6 @@
 ---
 import Base from "./Base.astro";
-import { DISPLAY, SITE } from "../lib/site";
+import { PERSON, SITE } from "../lib/site";
 const { title, description, permalink } = Astro.props.frontmatter;
 const path = permalink || "/media-timeline/";
 const current = path === "/media-timeline/" ? "media" : undefined;
@@ -8,7 +8,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     { "@type": "WebPage", "name": title, "url": new URL(path, SITE).href, "description": description },
-    { "@type": "Person", "@id": SITE + "/#person", "name": DISPLAY },
+    PERSON,
   ],
 };
 ---

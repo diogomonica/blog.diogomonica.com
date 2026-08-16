@@ -1,0 +1,76 @@
+---
+import Base from "../layouts/Base.astro";
+import { APEX, BIO, DISPLAY, PERSON, PERSON_ID, SITE } from "../lib/site";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    PERSON,
+    {
+      "@type": "AboutPage",
+      name: "About",
+      url: new URL("/about/", SITE).href,
+      description: BIO,
+      mainEntity: { "@id": PERSON_ID },
+    },
+  ],
+};
+---
+<Base title="About" description={BIO} path="/about/" jsonLd={jsonLd} current="about">
+  <article class="content">
+    <header class="page-head">
+      <h1 class="wordmark">About</h1>
+    </header>
+
+    <p>
+      {DISPLAY} is General Partner at Haun Ventures, Co-founder and Executive Chairman of
+      Anchorage Digital, Chairman of the NEAR Foundation, and a Director at Erebor.
+    </p>
+
+    <p>
+      Earlier he led security at Docker and platform security at Square (now Block).
+      He holds a PhD in computer science from Instituto Superior Técnico at the University of Lisbon.
+    </p>
+
+    <h2>Roles</h2>
+    <ul>
+      <li>Until 2015 — Platform security, Square (now Block).</li>
+      <li>2015–2017 — Security lead, Docker.</li>
+      <li>
+        2017–present — Co-founder of Anchorage Digital. In 2024 he became Executive Chairman;
+        Nathan McCauley is CEO.
+      </li>
+      <li>2024–present — General Partner, Haun Ventures.</li>
+      <li>Chairman, NEAR Foundation.</li>
+      <li>2026–present — Director, Erebor.</li>
+    </ul>
+
+    <h2>Links</h2>
+    <p class="identity-links">
+      <a href={APEX}>diogomonica.com</a>
+      <a href={SITE}>Blog</a>
+      <a rel="me" href="https://x.com/diogomonica">X</a>
+      <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
+      <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
+      <a rel="me" href="https://www.wikidata.org/wiki/Q111948997">Wikidata</a>
+      <a rel="me" href="https://www.haun.co/team/diogo-monica">Haun Ventures</a>
+    </p>
+
+    <h2>Sources</h2>
+    <ul>
+      <li>
+        <a href="https://www.anchorage.com/insights/positioned-for-the-future-new-role-at-anchorage-digital">
+          Anchorage Digital: Executive Chairman announcement (20 March 2024)
+        </a>
+      </li>
+      <li>
+        <a href="https://www.haun.co/team/diogo-monica">Haun Ventures team page</a>
+      </li>
+      <li>
+        <a href="https://www.occ.gov/news-issuances/news-releases/2025/nr-occ-2025-101a.pdf">
+          OCC conditional approval letter for Erebor Bank, N.A. (November 2025)
+        </a>
+      </li>
+    </ul>
+  </article>
+</Base>
