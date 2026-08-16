@@ -11,6 +11,7 @@ const posts = defineCollection({
     slug: z.string(),
     tags: z.array(z.string()),
     deadImages: z.array(z.string()).default([]),
+    canonical: z.string().optional(),
   }),
 });
 

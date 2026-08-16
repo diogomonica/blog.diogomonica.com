@@ -14,9 +14,11 @@ interface Props {
   jsonLd?: object;
   image?: string;
   current?: "home" | "archive" | "media";
+  canonical?: string;
 }
-const { title, description, path, ogType = "website", jsonLd, image, current } = Astro.props;
+const { title, description, path, ogType = "website", jsonLd, image, current, canonical } = Astro.props;
 const url = new URL(path, SITE).href;
+const canonicalHref = canonical ?? url;
 const ogImage = image ? new URL(image, SITE).href : new URL("/favicon.png", SITE).href;
 const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
 ---
@@ -33,7 +35,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   </style>
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
-  <link rel="canonical" href={url} />
+  <link rel="canonical" href={canonicalHref} />
   <link rel="icon" href="/favicon.png" type="image/png" />
   <link rel="alternate" type="application/rss+xml" title={DISPLAY} href={new URL("/rss.xml", SITE).href} />
   <meta property="og:site_name" content={DISPLAY} />

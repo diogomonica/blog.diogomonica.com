@@ -32,7 +32,7 @@ const jsonLd = {
   ],
 };
 ---
-<Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd}>
+<Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd} canonical={post.data.canonical}>
   <article class="read">
     <header>
       <p class="byline">
