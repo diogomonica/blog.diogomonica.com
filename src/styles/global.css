@@ -246,12 +246,6 @@ h2 { font-size: 1rem; margin: 0; font-weight: 600; }
   line-height: 1.1;
   color: var(--fg);
 }
-.stat-hint {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: 0.78rem;
-}
 
 .chips {
   display: flex;
