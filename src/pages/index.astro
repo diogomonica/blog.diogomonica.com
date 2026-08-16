@@ -37,28 +37,34 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [person, { "@type":
   <p class="section-label">Archive</p>
   <section class="stat-strip" aria-label="Writing and media stats">
     <article class="stat-card">
-      <span class="stat-label">Posts</span>
-      <span class="stat-value">{stats.total}</span>
+      <p class="stat-row">
+        <span class="stat-label">Posts</span>
+        <span class="stat-value">{stats.total}</span>
+      </p>
+      <p class="stat-row">
+        <span class="stat-label">Media</span>
+        <span class="stat-value">{media.total}</span>
+      </p>
     </article>
     <article class="stat-card">
-      <span class="stat-label">Last post</span>
-      <span class="stat-value">{stats.lastDate}</span>
+      <p class="stat-row">
+        <span class="stat-label">Last post</span>
+        <span class="stat-value">{stats.lastDate}</span>
+      </p>
+      <p class="stat-row">
+        <span class="stat-label">Last appearance</span>
+        <span class="stat-value">{media.lastDate}</span>
+      </p>
     </article>
     <article class="stat-card">
-      <span class="stat-label">Post topics</span>
-      <span class="stat-value">{stats.topicCount}</span>
-    </article>
-    <article class="stat-card">
-      <span class="stat-label">Media</span>
-      <span class="stat-value">{media.total}</span>
-    </article>
-    <article class="stat-card">
-      <span class="stat-label">Last appearance</span>
-      <span class="stat-value">{media.lastDate}</span>
-    </article>
-    <article class="stat-card">
-      <span class="stat-label">Media topics</span>
-      <span class="stat-value">{media.topicCount}</span>
+      <p class="stat-row">
+        <span class="stat-label">Post topics</span>
+        <span class="stat-value">{stats.topicCount}</span>
+      </p>
+      <p class="stat-row">
+        <span class="stat-label">Media topics</span>
+        <span class="stat-value">{media.topicCount}</span>
+      </p>
     </article>
   </section>
 
