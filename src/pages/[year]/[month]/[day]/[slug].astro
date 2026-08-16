@@ -1,20 +1,26 @@
 ---
 import { getCollection, render } from "astro:content";
 import Base from "../../../../layouts/Base.astro";
+import RecordRail from "../../../../components/RecordRail.astro";
 import { SITE, DISPLAY, SAME_AS } from "../../../../lib/site";
+import { buildPostRecords } from "../../../../lib/posts";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
-  return posts.map((post) => {
+  const records = buildPostRecords(await getCollection("posts"));
+  return records.map(({ post, readingTime, prev, next }) => {
     const [year, month, day] = post.data.date.split("-");
-    return { params: { year, month, day, slug: post.data.slug }, props: { post } };
+    return {
+      params: { year, month, day, slug: post.data.slug },
+      props: { post, readingTime, prev, next },
+    };
   });
 }
 
-const { post } = Astro.props;
+const { post, readingTime, prev, next } = Astro.props;
 const { Content } = await render(post);
 const { year, month, day, slug } = Astro.params;
 const path = `/${year}/${month}/${day}/${slug}/`;
+const url = new URL(path, SITE).href;
 const person = { "@type": "Person", "@id": SITE + "/#person", "name": DISPLAY, "url": "https://diogomonica.com", "sameAs": SAME_AS };
 const jsonLd = {
   "@context": "https://schema.org",
@@ -25,29 +31,30 @@ const jsonLd = {
       "headline": post.data.title,
       "description": post.data.description,
       "datePublished": post.data.published,
-      "url": new URL(path, SITE).href,
+      "url": url,
       "author": { "@id": SITE + "/#person" },
-      "mainEntityOfPage": new URL(path, SITE).href,
+      "mainEntityOfPage": url,
     },
   ],
 };
 ---
 <Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd} canonical={post.data.canonical}>
-  <article class="read">
-    <header>
-      <p class="byline">
-        <time datetime={post.data.date}>{post.data.date}</time>
-        {post.data.tags.length > 0 && (
-          <>
-            {" · "}
-            {post.data.tags.join(" · ")}
-          </>
-        )}
-      </p>
-      <h1>{post.data.title}</h1>
-    </header>
-    <div class="content">
-      <Content />
-    </div>
-  </article>
+  <div class="post-layout">
+    <RecordRail
+      date={post.data.date}
+      tags={post.data.tags}
+      readingTime={readingTime}
+      url={url}
+      prev={prev}
+      next={next}
+    />
+    <article class="read">
+      <header>
+        <h1>{post.data.title}</h1>
+      </header>
+      <div class="content">
+        <Content />
+      </div>
+    </article>
+  </div>
 </Base>
