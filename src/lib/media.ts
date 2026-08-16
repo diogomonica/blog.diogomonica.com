@@ -1,5 +1,4 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import timelineMarkdown from "../pages/media-timeline.md?raw";
 
 export type MediaItem = {
   title: string;
@@ -14,7 +13,6 @@ export type HomepageMedia = {
   total: number;
 };
 
-const TIMELINE_PATH = fileURLToPath(new URL("../pages/media-timeline.md", import.meta.url));
 const LATEST_COUNT = 8;
 
 /** Title-card artwork with no real photo. */
@@ -89,7 +87,7 @@ export function parseMediaTimeline(markdown: string): MediaItem[] {
 }
 
 export function loadHomepageMedia(limit = LATEST_COUNT): HomepageMedia {
-  const all = parseMediaTimeline(readFileSync(TIMELINE_PATH, "utf8"));
+  const all = parseMediaTimeline(timelineMarkdown);
   return {
     total: all.length,
     latest: all.filter((item) => !isTitleCardOnly(item)).slice(0, limit),
