@@ -68,10 +68,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
     <div class="wrap">
       <a class="brand" href="/" aria-label={DISPLAY}>
         <BrandMark />
-        <span class="brand-lockup" aria-hidden="true">
-          <span class="brand-name">Diogo</span>
-          <span class="brand-sub">Mónica</span>
-        </span>
+        <span class="sr-only">{DISPLAY}</span>
       </a>
       <nav class="top-nav" aria-label="Site">
         <a href="/" aria-current={current === "home" ? "page" : undefined}>Posts</a>
