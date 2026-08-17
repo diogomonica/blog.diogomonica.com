@@ -2,42 +2,66 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { DISPLAY } from "../lib/site";
-import { buildStats } from "../lib/stats";
+import { buildStats, featuredKey, featuredKeys } from "../lib/stats";
 
 const stats = buildStats(await getCollection("posts"));
+const featured = featuredKeys(stats.posts);
 const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
+const years = [...byYear].reverse().map((y) => y.year);
+const yearFilterCss = years.map((year) => `
+.feed:has(#feed-${year}:checked) label[for="feed-${year}"] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.feed:has(#feed-${year}:checked) .archive-block:not([data-year="${year}"]) {
+  display: none;
+}
+`).join("");
 ---
 <Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/" current="archive">
+  <style is:inline set:html={yearFilterCss}></style>
   <header class="page-head">
     <h1 class="wordmark">All<span class="wordmark-dim"> posts</span></h1>
     <p>{stats.total} essays, {stats.yearsActive}.</p>
   </header>
 
-  {byYear.map((year) => (
-    <section class="archive-block" id={`y${year.year}`}>
-      <h2>{year.year} · {year.count}</h2>
-      <div class="table-wrap">
-        <table class="feed-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Title</th>
-              <th>Topics</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.posts.filter((post) => post.year === year.year).map((post) => (
-              <tr class="post-row">
-                <td class="col-date"><time datetime={post.date}>{post.date}</time></td>
-                <td class="col-title">
-                  <a href={post.href}>{post.title}</a>
-                </td>
-                <td class="col-topics">{post.tags.join(", ")}</td>
+  <div class="feed archive-feed">
+    <input class="feed-ctrl" type="radio" name="feed" id="feed-featured" />
+    <input class="feed-ctrl" type="radio" name="feed" id="feed-all" checked />
+    {years.map((year) => <input class="feed-ctrl" type="radio" name="feed" id={`feed-${year}`} />)}
+    <div class="chips" role="group" aria-label="Filter posts">
+      <label for="feed-featured">Featured</label>
+      <label for="feed-all">All</label>
+      {years.map((year) => <label for={`feed-${year}`}>{year}</label>)}
+    </div>
+
+    {byYear.map((year) => (
+      <section class="archive-block" id={`y${year.year}`} data-year={year.year}>
+        <h2>{year.year} · {year.count}</h2>
+        <div class="table-wrap">
+          <table class="feed-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Topics</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  ))}
+            </thead>
+            <tbody>
+              {stats.posts.filter((post) => post.year === year.year).map((post) => (
+                <tr class="post-row" data-featured={featured.has(featuredKey(post)) || undefined}>
+                  <td class="col-date"><time datetime={post.date}>{post.date}</time></td>
+                  <td class="col-title">
+                    <a href={post.href}>{post.title}</a>
+                  </td>
+                  <td class="col-topics">{post.tags.join(", ")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+  </div>
 </Base>

@@ -24,6 +24,16 @@ export type ArchiveStats = {
   yearCounts: YearCount[];
 };
 
+export const FEATURED_COUNT = 8;
+
+export function featuredKey(post: Pick<PostRow, "date" | "slug">): string {
+  return post.date + post.slug;
+}
+
+export function featuredKeys(posts: PostRow[], count = FEATURED_COUNT): Set<string> {
+  return new Set(posts.slice(0, count).map(featuredKey));
+}
+
 export function hrefFor(date: string, slug: string): string {
   return `/${date.replaceAll("-", "/")}/${slug}/`;
 }

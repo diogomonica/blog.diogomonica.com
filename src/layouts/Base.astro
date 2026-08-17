@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import BrandMark from "../components/BrandMark.astro";
 import { SITE, DISPLAY, SAME_AS } from "../lib/site";
 
 interface Props {
@@ -33,7 +34,9 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <meta name="description" content={description} />
   <meta name="author" content={DISPLAY} />
   <link rel="canonical" href={canonicalHref} />
-  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="alternate" type="application/rss+xml" title={DISPLAY} href={new URL("/rss.xml", SITE).href} />
   <meta property="og:site_name" content={DISPLAY} />
   <meta property="og:type" content={ogType} />
@@ -63,8 +66,12 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/">
-        <span class="brand-name">Diogo</span><span class="brand-sub">Mónica</span>
+      <a class="brand" href="/" aria-label={DISPLAY}>
+        <BrandMark />
+        <span class="brand-lockup" aria-hidden="true">
+          <span class="brand-name">Diogo</span>
+          <span class="brand-sub">Mónica</span>
+        </span>
       </a>
       <nav class="top-nav" aria-label="Site">
         <a href="/" aria-current={current === "home" ? "page" : undefined}>Posts</a>
@@ -82,7 +89,10 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <main id="main" class="wrap"><slot /></main>
   <footer class="site-footer">
     <div class="wrap">
-      <span>© {DISPLAY}</span>
+      <span class="footer-brand">
+        <BrandMark class="footer-mark" />
+        <span>© {DISPLAY}</span>
+      </span>
       <nav aria-label="Identity">
         <a href="https://diogomonica.com">diogomonica.com</a>
         <a rel="me" href="https://x.com/diogomonica">@diogomonica</a>
