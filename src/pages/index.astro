@@ -6,8 +6,6 @@ import { buildStats } from "../lib/stats";
 import { loadHomepageMedia } from "../lib/media";
 
 const stats = buildStats(await getCollection("posts"));
-const featuredDates = new Set(stats.posts.slice(0, 8).map((p) => p.date + p.slug));
-const years = stats.yearCounts.map((y) => y.year);
 const media = loadHomepageMedia();
 
 const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": PERSON_ID } }] };
@@ -50,14 +48,6 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type":
       <h2>Posts</h2>
       <a href="/archive/">All {stats.total}</a>
     </div>
-    <input class="feed-ctrl" type="radio" name="feed" id="feed-featured" checked />
-    <input class="feed-ctrl" type="radio" name="feed" id="feed-all" />
-    {years.map((year) => <input class="feed-ctrl" type="radio" name="feed" id={`feed-${year}`} />)}
-    <div class="chips">
-      <label for="feed-featured">Featured</label>
-      <label for="feed-all">All</label>
-      {years.map((year) => <label for={`feed-${year}`}>{year}</label>)}
-    </div>
     <div class="table-wrap">
       <table class="feed-table posts-table">
         <thead>
@@ -69,7 +59,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type":
         </thead>
         <tbody>
           {stats.posts.map((post) => (
-            <tr class="post-row" data-year={post.year} data-featured={featuredDates.has(post.date + post.slug) || undefined}>
+            <tr class="post-row">
               <td class="col-date"><time datetime={post.date}>{post.date}</time></td>
               <td class="col-title">
                 <a href={post.href}>{post.title}</a>
