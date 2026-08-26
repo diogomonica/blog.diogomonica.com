@@ -145,13 +145,6 @@ a:hover { color: var(--muted); }
 .top-nav a[aria-current="page"] {
   color: var(--fg);
 }
-.top-nav a.nav-primary {
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
-  padding: 0.38rem 0.75rem;
-}
-.top-nav a.nav-primary:hover { color: var(--accent-ink); opacity: 0.88; }
 
 .header-tools { display: flex; align-items: center; gap: 0.5rem; }
 .status {
