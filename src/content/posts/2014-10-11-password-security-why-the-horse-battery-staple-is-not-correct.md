@@ -63,15 +63,11 @@ This leads to the repeated use of what are, in fact, very weak passwords, highly
 
 When coupled with the predominance of dictionary based attacks and leaks of large password data sets, this situation has led, in later years, to the idea that the single most useful criterion on which to classify the strength of a candidate password, is the frequency with which it has appeared in the past.
 
-|  |  |
-| --- | --- |
-|  |  |
-
 This means that instead of a password strength meter you should be ensuring that there is no skew in the distribution of passwords. If each password is guaranteed to be unique, the advantage of a statistical guessing attack is greatly reduced.
 
 There are [several](https://www.usenix.org/conference/hotsec10/popularity-everything-new-approach-protecting-passwords-statistical-guessing) [works](http://www.internetsociety.org/adaptive-password-strength-meters-markov-models) in the literature that propose such schemes, including one of [my own](https://github.com/diogomonica/diogomonica.com/blob/master/media/password-security-why-the-horse-battery-staple-is-not-correct/local_password_validation_with_soms_diogo_monica.pdf) (PDF).
 
-<iframe allowfullscreen="" frameborder="0" height="355" marginheight="0" marginwidth="0" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/38823827" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" width="425"> </iframe>
+[Local password validation with SOMs (slides, PDF)](https://github.com/diogomonica/diogomonica.com/blob/master/media/password-security-why-the-horse-battery-staple-is-not-correct/local_password_validation_with_soms_diogo_monica.pdf)
 
 ## What we should do
 
