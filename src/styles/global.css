@@ -533,6 +533,7 @@ article h1 { font-size: clamp(1.7rem, 3.4vw, 2.35rem); }
   line-height: 1.25;
 }
 .content p { margin: 0; }
+.content p + p { margin-top: 1.25em; }
 .content ul, .content ol { padding-left: 1.2rem; }
 .content li + li { margin-top: 0.35rem; }
 .content img {
