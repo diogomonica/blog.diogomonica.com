@@ -14,9 +14,6 @@ Anyway, something late-stage private market participants feel constantly is that
 
 Shin, Kim, and Park study unicorns that first hit $1B between 2005 and 2019. PitchBook for deals, VentureXpert for co-investment networks, Factiva for press. Analysis sample: about 385 unicorns and 3,117 rounds.
 
-Source: S. Joseph Shin, Sunu Kim, and Haemin Dennis Park, *[Unicorns, Media Fame, and Dumb Money: The Strategic Inflation of Unicorn Startups' Valuations](https://doi.org/10.2139/ssrn.5911322)* (SSRN; posted 13 Dec 2025; written 1 Sep 2025).  
-Direct: [papers.ssrn.com/abstract=5911322](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5911322)
-
 What they find looks like a Schelling point at exactly $1B. Crossing that line *coincides with* a media spike and lower-centrality VCs showing up on the next rounds.
 
 ## 1. Valuations bunch at exactly $1B
@@ -46,3 +43,6 @@ One way to read this: higher-centrality VCs take the unicorn round; lower-centra
 ## Why this is interesting
 
 The conclusion matches what we already intuitively knew: unicorn status is in many cases a marketing event, and the room that shows up afterward is often weaker on network quality.
+
+Source: S. Joseph Shin, Sunu Kim, and Haemin Dennis Park, *[Unicorns, Media Fame, and Dumb Money: The Strategic Inflation of Unicorn Startups' Valuations](https://doi.org/10.2139/ssrn.5911322)* (SSRN; posted 13 Dec 2025; written 1 Sep 2025).  
+Direct: [papers.ssrn.com/abstract=5911322](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5911322)
