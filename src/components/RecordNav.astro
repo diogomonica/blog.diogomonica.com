@@ -9,7 +9,7 @@ interface Props {
 
 const { url, prev, next } = Astro.props;
 ---
-<nav class="record-nav" aria-label="Record">
+<nav class="record-nav" aria-label="More essays">
   <div class="record-nav-copy">
     <button type="button" class="copy-link" data-copy-link={url} aria-live="polite">
       Copy link
@@ -19,13 +19,13 @@ const { url, prev, next } = Astro.props;
     <div class="record-nav-row">
       {prev && (
         <a class="record-nav-btn record-nav-prev" href={prev.href}>
-          <span class="record-nav-label">← Previous</span>
+          <span class="record-nav-label">Previous</span>
           <span class="record-nav-title">{prev.title}</span>
         </a>
       )}
       {next && (
         <a class="record-nav-btn record-nav-next" href={next.href}>
-          <span class="record-nav-label">Next →</span>
+          <span class="record-nav-label">Next</span>
           <span class="record-nav-title">{next.title}</span>
         </a>
       )}

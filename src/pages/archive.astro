@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import { formatDate } from "../lib/format";
 import { DISPLAY } from "../lib/site";
 import { buildStats, featuredKey, featuredKeys } from "../lib/stats";
 
@@ -10,60 +11,50 @@ const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
 const years = [...byYear].reverse().map((y) => y.year);
 ---
 <Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/" current="archive">
-  <header class="page-head">
-    <h1 class="wordmark">All<span class="wordmark-dim"> posts</span></h1>
-    <p>{stats.total} essays, {stats.yearsActive}.</p>
-  </header>
+  <article class="ch col">
+    <header class="ch-head">
+      <p class="ch-kicker">Contents</p>
+      <h1 class="ch-title">All essays</h1>
+      <p class="ch-meta">{stats.total} essays <span class="fell">·</span> {stats.yearsActive}</p>
+    </header>
 
-  <div class="archive-feed" data-archive>
-    <div class="archive-tools">
-      <div class="chips" role="group" aria-label="Filter posts">
-        <button type="button" data-archive-filter="featured">Featured</button>
-        <button type="button" data-archive-filter="all" aria-pressed="true">All</button>
-        {years.map((year) => (
-          <button type="button" data-archive-filter={year}>{year}</button>
-        ))}
-      </div>
-      <label class="archive-search">
-        <span class="sr-only">Search posts</span>
-        <input type="search" name="q" placeholder="Search" data-archive-search autocomplete="off" />
-      </label>
-    </div>
-
-    {byYear.map((year) => (
-      <section class="archive-block" id={`y${year.year}`} data-year={year.year} data-archive-year={year.year}>
-        <h2>{year.year} · {year.count}</h2>
-        <div class="table-wrap">
-          <table class="feed-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Title</th>
-                <th>Topics</th>
-              </tr>
-            </thead>
-            <tbody>
-              {stats.posts.filter((post) => post.year === year.year).map((post) => (
-                <tr
-                  class="post-row"
-                  data-year={post.year}
-                  data-featured={featured.has(featuredKey(post)) || undefined}
-                  data-search={[post.title, post.description, ...post.tags].join(" ").toLowerCase()}
-                >
-                  <td class="col-date"><time datetime={post.date}>{post.date}</time></td>
-                  <td class="col-title">
-                    <a href={post.href}>{post.title}</a>
-                  </td>
-                  <td class="col-topics">{post.tags.join(", ")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div class="archive-feed" data-archive>
+      <div class="archive-tools">
+        <div class="chips" role="group" aria-label="Filter posts">
+          <button type="button" data-archive-filter="featured">Featured</button>
+          <button type="button" data-archive-filter="all" aria-pressed="true">All</button>
+          {years.map((year) => (
+            <button type="button" data-archive-filter={year}>{year}</button>
+          ))}
         </div>
-      </section>
-    ))}
-    <p class="archive-empty" data-archive-empty hidden>No posts match.</p>
-  </div>
+        <label class="archive-search">
+          <span class="sr-only">Search posts</span>
+          <input type="search" name="q" placeholder="Search" data-archive-search autocomplete="off" />
+        </label>
+      </div>
+
+      {byYear.map((year) => (
+        <section class="year-block" id={`y${year.year}`} data-year={year.year} data-archive-year={year.year}>
+          <h2 class="year-kicker">{year.year} <span class="fell">·</span> {year.count}</h2>
+          <ol class="toc">
+            {stats.posts.filter((post) => post.year === year.year).map((post) => (
+              <li
+                class="toc-item post-row"
+                data-year={post.year}
+                data-featured={featured.has(featuredKey(post)) || undefined}
+                data-search={[post.title, post.description, ...post.tags].join(" ").toLowerCase()}
+              >
+                <p class="toc-date"><time datetime={post.date}>{formatDate(post.date)}</time></p>
+                <a class="toc-title" href={post.href}>{post.title}</a>
+                {post.tags.length > 0 && <p class="toc-tags">{post.tags.join(" · ")}</p>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+      <p class="archive-empty" data-archive-empty hidden>No posts match.</p>
+    </div>
+  </article>
 </Base>
 
 <script>

@@ -59,6 +59,16 @@ function jpegSize(data: Buffer): ImageSize | null {
   return null;
 }
 
+function gifSize(data: Buffer): ImageSize | null {
+  if (data.length < 10) return null;
+  const sig = data.toString("ascii", 0, 6);
+  if (sig !== "GIF87a" && sig !== "GIF89a") return null;
+  return {
+    width: data.readUInt16LE(6),
+    height: data.readUInt16LE(8),
+  };
+}
+
 /** Intrinsic pixel size of a file under `public/`. Does not invent dimensions. */
 export function readPublicImageSize(src: string): ImageSize {
   const cached = cache.get(src);
@@ -66,7 +76,7 @@ export function readPublicImageSize(src: string): ImageSize {
 
   const abs = join(process.cwd(), "public", src.replace(/^\//, ""));
   const data = readFileSync(abs);
-  const size = pngSize(data) ?? jpegSize(data);
+  const size = pngSize(data) ?? jpegSize(data) ?? gifSize(data);
   if (!size || size.width < 1 || size.height < 1) {
     throw new Error(`Could not read image dimensions for ${src}`);
   }
