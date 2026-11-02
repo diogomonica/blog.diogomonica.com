@@ -1,0 +1,3 @@
+# Permanent handoff to the hub about page. Fragments such as #media-kit stay in the browser.
+/about https://diogomonica.com/about 301
+/about/ https://diogomonica.com/about 301

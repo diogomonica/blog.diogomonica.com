@@ -990,57 +990,6 @@ a.nref {
   letter-spacing: .1em;
 }
 
-.kit-bio + .kit-bio { margin-top: 1.8em; }
-.kit-bio-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: .75rem;
-  margin: 0 0 .7em;
-}
-.kit-bio-head h3,
-.prose .kit-bio h3 {
-  margin: 0;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 1.15em;
-  text-align: left;
-}
-.prose .kit-bio h3::before { display: none; }
-.prose .kit-photos {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.3rem;
-}
-.prose .kit-photos li,
-.prose .kit-photos li + li { margin: 0; }
-.prose .kit-photos img {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  box-shadow: 0 0 0 1px var(--hair);
-}
-.kit-photo-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .35rem .9rem;
-  margin: .55rem 0 .3rem;
-  font-size: .92em;
-}
-.kit-photo-credit {
-  margin: 0;
-  color: var(--slate);
-  font-size: .82em;
-  line-height: 1.45;
-  text-align: left;
-}
-@media (max-width: 759px) {
-  .prose .kit-photos { grid-template-columns: minmax(0, 1fr); }
-}
-
 .media-year {
   margin: 2.4em 0 .2em;
   font-style: normal;

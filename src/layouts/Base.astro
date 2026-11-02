@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { DISPLAY, SAME_AS, SITE } from "../lib/site";
+import { ABOUT, DISPLAY, SAME_AS, SITE } from "../lib/site";
 
 interface Props {
   title: string;
@@ -9,7 +9,7 @@ interface Props {
   ogType?: string;
   jsonLd?: object;
   image?: string;
-  current?: "home" | "about" | "archive" | "media";
+  current?: "home" | "archive" | "media";
   canonical?: string;
 }
 const { title, description, path, ogType = "website", jsonLd, image, canonical } = Astro.props;
@@ -68,7 +68,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <header class="mast">
     <nav class="mast-nav" aria-label="Site">
       <a href="https://diogomonica.com">Home</a>
-      <a href="https://diogomonica.com/about">About</a>
+      <a href={ABOUT}>About</a>
       <a href="/" aria-current={path === "/" ? "page" : undefined}>Blog</a>
     </nav>
   </header>
@@ -78,7 +78,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
     <p class="colophon-fell fell">essays</p>
     <nav aria-label="More">
       <a href="/archive/">Archive</a>
-      <a href="/about/">About this blog</a>
+      <a href={ABOUT}>About</a>
       <a href="/media-timeline/">Media</a>
       <a href="/rss.xml">RSS</a>
       <a href="https://diogomonica.com">diogomonica.com</a>
