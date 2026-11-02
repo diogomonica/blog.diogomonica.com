@@ -13,15 +13,7 @@ const media = loadHomepageMedia();
 const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": PERSON_ID } }] };
 ---
 <Base title={DISPLAY} description={BIO} path="/" jsonLd={jsonLd} current="home">
-  <header class="hero">
-    <p class="hero-kicker l l0"><span class="i w0 fell">the</span></p>
-    <h1 class="hero-title l l1">Essays</h1>
-    <p class="hero-def l l2">{BIO}</p>
-    <p class="hero-span l l3 fell">{stats.yearsActive}</p>
-    <p class="hero-resume" data-resume hidden>
-      <span class="fell">from </span><a data-resume-link href="/"></a>
-    </p>
-  </header>
+  <h1 class="sr-only">Essays</h1>
 
   <div class="col front">
     <p class="toc-kicker">Recent</p>

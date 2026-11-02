@@ -204,31 +204,6 @@ document.addEventListener("click", (event) => {
   ref.setAttribute("aria-expanded", "true");
 });
 
-const PLACE = "dm-blog-place";
-if (article) {
-  const title = article.querySelector("h1")?.textContent?.trim() ?? document.title;
-  try {
-    localStorage.setItem(PLACE, JSON.stringify({ href: window.location.pathname, title, t: Date.now() }));
-  } catch {
-    /* private mode */
-  }
-}
-
-const resume = document.querySelector("[data-resume]");
-if (resume) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(PLACE) ?? "null") as { href?: string; title?: string } | null;
-    const link = resume.querySelector("[data-resume-link]");
-    if (saved?.href && saved.title && link instanceof HTMLAnchorElement && saved.href !== window.location.pathname) {
-      link.href = saved.href;
-      link.textContent = saved.title;
-      resume.removeAttribute("hidden");
-    }
-  } catch {
-    /* ignore broken storage */
-  }
-}
-
 function schedule() {
   if (ticking) return;
   ticking = true;
