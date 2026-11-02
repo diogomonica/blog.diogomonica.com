@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Base from "../../../../layouts/Base.astro";
 import RecordNav from "../../../../components/RecordNav.astro";
-import RecordRail from "../../../../components/RecordRail.astro";
+import { formatDate } from "../../../../lib/format";
 import { PERSON, PERSON_ID, SITE } from "../../../../lib/site";
 import { buildPostRecords } from "../../../../lib/posts";
 
@@ -39,20 +39,21 @@ const jsonLd = {
 };
 ---
 <Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd} canonical={post.data.canonical}>
-  <div class="post-layout">
-    <RecordRail
-      date={post.data.date}
-      tags={post.data.tags}
-      readingTime={readingTime}
-    />
-    <article class="read">
-      <header>
-        <h1>{post.data.title}</h1>
-      </header>
-      <div class="content">
-        <Content />
-      </div>
-      <RecordNav url={url} prev={prev} next={next} />
-    </article>
-  </div>
+  <div class="topline" aria-hidden="true"></div>
+  <nav class="rail" aria-label="Sections">
+    <div class="rail-track" aria-hidden="true"></div>
+    <div class="rail-fill" aria-hidden="true"></div>
+  </nav>
+  <article class="ch essay">
+    <header class="ch-head">
+      <p class="ch-kicker"><time datetime={post.data.date}>{formatDate(post.data.date)}</time></p>
+      <h1 class="ch-title">{post.data.title}</h1>
+      <p class="ch-meta">Read <span class="fell">·</span> {readingTime}</p>
+      {post.data.tags.length > 0 && <p class="ch-tags">{post.data.tags.join(" · ")}</p>}
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <RecordNav url={url} prev={prev} next={next} />
+  </article>
 </Base>

@@ -25,12 +25,14 @@ const jsonLd = {
 };
 ---
 <Base title="About" description={BIO} path="/about/" jsonLd={jsonLd} current="about">
-  <article class="content">
-    <header class="page-head">
-      <h1 class="wordmark">About</h1>
+  <article class="ch col">
+    <header class="ch-head">
+      <p class="ch-kicker">About</p>
+      <h1 class="ch-title">{DISPLAY}</h1>
     </header>
+    <div class="prose">
 
-    <p>
+    <p class="lede">
       {DISPLAY} is General Partner at Haun Ventures, Co-founder and Executive Chairman of
       Anchorage Digital, Chairman of the NEAR Foundation, and a Director at Erebor.
     </p>
@@ -132,5 +134,6 @@ const jsonLd = {
         </a>
       </li>
     </ul>
+    </div>
   </article>
 </Base>

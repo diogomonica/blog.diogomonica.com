@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
-import BrandMark from "../components/BrandMark.astro";
-import { SITE, DISPLAY, SAME_AS } from "../lib/site";
+import { DISPLAY, SAME_AS, SITE } from "../lib/site";
 
 interface Props {
   title: string;
@@ -13,22 +12,21 @@ interface Props {
   current?: "home" | "about" | "archive" | "media";
   canonical?: string;
 }
-const { title, description, path, ogType = "website", jsonLd, image, current, canonical } = Astro.props;
+const { title, description, path, ogType = "website", jsonLd, image, canonical } = Astro.props;
 const url = new URL(path, SITE).href;
 const canonicalHref = canonical ?? url;
 const ogImage = image ? new URL(image, SITE).href : new URL("/favicon.png", SITE).href;
 const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en-US">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#0d0d0d" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#ffffff" />
   <style is:inline>
-    html{background:#0d0d0d;color-scheme:dark}
-    html[data-theme="light"]{background:#f4f4f4;color-scheme:light}
+    html{background:#fff;color:#1f2428;color-scheme:only light}
   </style>
   <title>{pageTitle}</title>
   <meta name="description" content={description} />
@@ -38,6 +36,9 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="alternate" type="application/rss+xml" title={DISPLAY} href={new URL("/rss.xml", SITE).href} />
+  <link rel="preload" href="/fonts/eb-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/eb-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/im-fell-english-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin />
   <meta property="og:site_name" content={DISPLAY} />
   <meta property="og:type" content={ogType} />
   <meta property="og:title" content={title} />
@@ -53,65 +54,42 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   <script is:inline>
     (function () {
+      var root = document.documentElement;
+      root.classList.add("js");
       try {
-        var stored = localStorage.getItem("theme");
-        document.documentElement.setAttribute("data-theme", stored === "light" ? "light" : "dark");
-      } catch (e) {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
+        if (window.matchMedia("(min-width: 1100px)").matches) root.classList.add("sidenotes");
+      } catch (e) {}
+      window.setTimeout(function () { root.classList.add("revealed"); }, 4000);
     })();
   </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="/" aria-label={DISPLAY}>
-        <BrandMark />
-        <span class="sr-only">{DISPLAY}</span>
-      </a>
-      <nav class="top-nav" aria-label="Site">
-        <a href="/" aria-current={current === "home" ? "page" : undefined}>Posts</a>
-        <a href="/about/" aria-current={current === "about" ? "page" : undefined}>About</a>
-        <a href="/archive/" aria-current={current === "archive" ? "page" : undefined}>Archive</a>
-        <a href="/media-timeline/" aria-current={current === "media" ? "page" : undefined}>Media</a>
-        <a href="/rss.xml">RSS</a>
-      </nav>
-      <div class="header-tools">
-        <p class="status"><span class="status-dot" aria-hidden="true"></span> Archive</p>
-        <button class="theme-toggle" type="button" data-theme-toggle>Light</button>
-      </div>
-    </div>
+  <header class="mast">
+    <nav class="mast-nav" aria-label="Site">
+      <a href="https://diogomonica.com">Home</a>
+      <a href="https://diogomonica.com/about">About</a>
+      <a href="/" aria-current={path === "/" ? "page" : undefined}>Blog</a>
+    </nav>
   </header>
-  <main id="main" class="wrap"><slot /></main>
-  <footer class="site-footer">
-    <div class="wrap">
-      <span class="footer-brand">
-        <BrandMark class="footer-mark" />
-        <span>© {DISPLAY}</span>
-      </span>
-      <nav aria-label="Identity">
-        <a href="https://diogomonica.com">diogomonica.com</a>
-        <a rel="me" href="https://x.com/diogomonica">@diogomonica</a>
-        <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
-        <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
-        <a rel="me" href="https://www.wikidata.org/wiki/Q111948997">Wikidata</a>
-      </nav>
-    </div>
+  <main id="main"><slot /></main>
+  <footer class="colophon">
+    <p class="colophon-name">{DISPLAY}</p>
+    <p class="colophon-fell fell">essays</p>
+    <nav aria-label="More">
+      <a href="/archive/">Archive</a>
+      <a href="/about/">About this blog</a>
+      <a href="/media-timeline/">Media</a>
+      <a href="/rss.xml">RSS</a>
+      <a href="https://diogomonica.com">diogomonica.com</a>
+      <a rel="me" href="https://x.com/diogomonica">X</a>
+      <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
+      <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
+      <a href="#main">Back to top</a>
+    </nav>
   </footer>
   <script>
-    const root = document.documentElement;
-    const button = document.querySelector("[data-theme-toggle]");
-    const label = () => (root.getAttribute("data-theme") === "light" ? "Dark" : "Light");
-    if (button) {
-      button.textContent = label();
-      button.addEventListener("click", () => {
-        const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-        root.setAttribute("data-theme", next);
-        try { localStorage.setItem("theme", next); } catch {}
-        button.textContent = label();
-      });
-    }
+    import "../scripts/reading.ts";
   </script>
 </body>
 </html>

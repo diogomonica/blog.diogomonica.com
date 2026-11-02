@@ -23,11 +23,11 @@ for (const item of items) {
 <Page title={title} description={description} path={path}>
   {groups.map((group) => (
     <>
-      <h3>{group.year}</h3>
+      <h2 class="media-year">{group.year}</h2>
       {group.items.map((item) => (
         <>
-          <h6>{item.title}</h6>
-          <p>
+          <h3 class="media-item"><a href={item.href}>{item.title}</a></h3>
+          <figure class="fig">
             <a href={item.href}>
               <img
                 src={item.image}
@@ -38,7 +38,7 @@ for (const item of items) {
                 decoding="async"
               />
             </a>
-          </p>
+          </figure>
         </>
       ))}
     </>

@@ -19,8 +19,13 @@ const jsonLd = {
 };
 ---
 <Base title={title} description={description} path={path} jsonLd={jsonLd} current={current}>
-  <article class:list={["content", { "media-page": path === "/media-timeline/" }]}>
-    <h1 class="wordmark">Media<span class="wordmark-dim"> timeline</span></h1>
-    <slot />
+  <article class="ch col">
+    <header class="ch-head">
+      <p class="ch-kicker">Record</p>
+      <h1 class="ch-title">Media timeline</h1>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
   </article>
 </Base>
