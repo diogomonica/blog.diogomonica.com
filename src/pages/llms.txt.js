@@ -1,5 +1,5 @@
 import { getCollection } from "astro:content";
-import { APEX, BIO, DISPLAY, NAME, ROLES, SITE } from "../lib/site";
+import { ABOUT, APEX, BIO, DISPLAY, NAME, ROLES, SITE } from "../lib/site";
 
 const NL = String.fromCharCode(10);
 const CORNERSTONE_SLUGS = [
@@ -35,8 +35,8 @@ export async function GET() {
     "- Name: " + DISPLAY,
     "- alternateName: " + NAME,
     "- Roles: " + ROLES.join("; "),
-    "- Education: BSc, MSc, and PhD, Instituto Superior Técnico, University of Lisbon. Press media kit: " + SITE + "/about/#media-kit",
-    "- About: " + SITE + "/about/",
+    "- Education: BSc, MSc, and PhD, Instituto Superior Técnico, University of Lisbon. Press media kit: " + ABOUT + "#media-kit",
+    "- About: " + ABOUT,
     "- Home: " + SITE + "/",
     "- Media: " + SITE + "/media-timeline/",
     "- RSS: " + SITE + "/rss.xml",
@@ -48,7 +48,7 @@ export async function GET() {
     "## Site",
     "",
     "- Home: " + SITE + "/",
-    "- About: " + SITE + "/about/",
+    "- About: " + ABOUT,
     "- Archive: " + SITE + "/archive/",
     "- Media timeline: " + SITE + "/media-timeline/",
     "- RSS: " + SITE + "/rss.xml",
