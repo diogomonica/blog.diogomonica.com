@@ -1,5 +1,6 @@
 export const SITE = 'https://blog.diogomonica.com';
 export const APEX = 'https://diogomonica.com';
+export const ABOUT = `${APEX}/about`;
 export const NAME = 'Diogo Monica';
 export const DISPLAY = 'Diogo Mónica';
 export const ROLES = [
