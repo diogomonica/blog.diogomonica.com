@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
-import { ABOUT, DISPLAY, SAME_AS, SITE } from "../lib/site";
+import BrandMark from "../components/BrandMark.astro";
+import { ABOUT, APEX, DISPLAY, SAME_AS, SITE } from "../lib/site";
 
 interface Props {
   title: string;
@@ -13,6 +14,11 @@ interface Props {
   canonical?: string;
 }
 const { title, description, path, ogType = "website", jsonLd, image, canonical } = Astro.props;
+const navItems = [
+  { href: `${APEX}/`, label: "Home", current: false },
+  { href: ABOUT, label: "About", current: false },
+  { href: "/", label: "Blog", current: true },
+];
 const url = new URL(path, SITE).href;
 const canonicalHref = canonical ?? url;
 const ogImage = image ? new URL(image, SITE).href : new URL("/favicon.png", SITE).href;
@@ -36,6 +42,7 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="alternate" type="application/rss+xml" title={DISPLAY} href={new URL("/rss.xml", SITE).href} />
+  <link rel="preload" href="/fonts/manrope-latin-wght-normal.v3.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/eb-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/eb-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/im-fell-english-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin />
@@ -65,31 +72,69 @@ const pageTitle = path === "/" ? DISPLAY : `${title} · ${DISPLAY}`;
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <header class="mast">
-    <nav class="mast-nav" aria-label="Site">
-      <a href="https://diogomonica.com">Home</a>
-      <a href={ABOUT}>About</a>
-      <a href="/" aria-current={path === "/" ? "page" : undefined}>Blog</a>
-    </nav>
+  <header class="site-header">
+    <div class="nav-bar">
+      <a class="brand" href={`${APEX}/`} aria-label="Diogo Mónica, home">
+        <BrandMark />
+      </a>
+      <nav class="top-nav" aria-label="Site">
+        {navItems.map((item) => (
+          <a href={item.href} aria-current={item.current ? "page" : undefined}>{item.label}</a>
+        ))}
+      </nav>
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <span class="nav-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
   </header>
+  <div class="nav-panel" id="mobile-nav" aria-hidden="true">
+    <nav aria-label="Site">
+      {navItems.map((item) => (
+        <a href={item.href} aria-current={item.current ? "page" : undefined}>{item.label}</a>
+      ))}
+    </nav>
+  </div>
   <main id="main"><slot /></main>
   <footer class="colophon">
     <p class="colophon-name">{DISPLAY}</p>
-    <p class="colophon-fell fell">essays</p>
-    <nav aria-label="More">
-      <a href="/archive/">Archive</a>
-      <a href={ABOUT}>About</a>
-      <a href="/media-timeline/">Media</a>
-      <a href="/rss.xml">RSS</a>
-      <a href="https://diogomonica.com">diogomonica.com</a>
-      <a rel="me" href="https://x.com/diogomonica">X</a>
-      <a rel="me" href="https://www.linkedin.com/in/diogomonica">LinkedIn</a>
-      <a rel="me" href="https://en.wikipedia.org/wiki/Diogo_Mónica">Wikipedia</a>
-      <a href="#main">Back to top</a>
-    </nav>
+    <a class="colophon-top" href="#main">Back to top</a>
   </footer>
   <script>
     import "../scripts/reading.ts";
+  </script>
+  <script is:inline>
+    (() => {
+      var toggle = document.querySelector(".nav-toggle");
+      var panel = document.querySelector(".nav-panel");
+      function setOpen(open) {
+        if (!toggle || !panel) return;
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        panel.classList.toggle("is-open", open);
+        panel.setAttribute("aria-hidden", open ? "false" : "true");
+        document.documentElement.classList.toggle("nav-open", open);
+        if (open) {
+          var first = panel.querySelector("a");
+          if (first) first.focus();
+        } else if (document.activeElement && panel.contains(document.activeElement)) {
+          toggle.focus();
+        }
+      }
+      if (toggle && panel) {
+        toggle.addEventListener("click", function () {
+          setOpen(toggle.getAttribute("aria-expanded") !== "true");
+        });
+        panel.addEventListener("click", function (event) {
+          if (event.target.closest("a")) setOpen(false);
+        });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") setOpen(false);
+        });
+        window.addEventListener("resize", function () {
+          if (window.innerWidth >= 960 && toggle.getAttribute("aria-expanded") === "true") setOpen(false);
+        });
+      }
+    })();
   </script>
 </body>
 </html>
