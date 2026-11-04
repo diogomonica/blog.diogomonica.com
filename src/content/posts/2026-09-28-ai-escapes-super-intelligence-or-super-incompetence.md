@@ -36,11 +36,9 @@ In a future post, I’ll enumerate a non-exhaustive list of what I believe defen
 
 At a minimum:
 
-We need logs that the agents can't rewrite, collected outside the agent's trust domain, append-only, and signed. Blockchains anyone?
-
-It’s now possible to create a private internet for dangerous evaluations (websites, package registries, synthetic identities, controlled targets), so the experiment doesn't inherit real victims.
-
-And air gaps. We've run air-gapped systems at Anchorage for almost a decade. It's entirely possible to build systems that can't be misconfigured onto the internet.
+- We need logs that the agents can't rewrite, collected outside the agent's trust domain, append-only, and signed. Blockchains anyone?
+- It’s now possible to create a private internet for dangerous evaluations (websites, package registries, synthetic identities, controlled targets), so the experiment doesn't inherit real victims.
+- And air gaps. We've run air-gapped systems at Anchorage for almost a decade. It's entirely possible to build systems that can't be misconfigured onto the internet.
 
 ![OpenAI's Noam Brown on air-gapping and temperature-channel side channels](/content/images/2026/09/ai-escapes-airgap-reddit.jpg)
 

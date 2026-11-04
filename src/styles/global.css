@@ -766,6 +766,64 @@ html.nav-open { overflow: hidden; }
 .prose li + li { margin-top: .4em; }
 .prose li p + p { text-indent: 0; margin-top: .4em; }
 
+/* Editorial markers for markdown lists. Endnotes stay numbered in the note face;
+   nav and other list-style:none lists are outside .prose or excluded below. */
+.prose ul:not(.endnotes *) {
+  list-style: none;
+  padding-left: 0;
+}
+.prose ul:not(.endnotes *) > li {
+  position: relative;
+  padding-left: 1.35em;
+}
+.prose ul:not(.endnotes *) > li::before {
+  content: "\2013";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent-deep);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1em;
+  line-height: inherit;
+  pointer-events: none;
+}
+.prose ul ul:not(.endnotes *) > li {
+  padding-left: 1.15em;
+}
+.prose ul ul:not(.endnotes *) > li::before {
+  content: "";
+  width: .26em;
+  height: .26em;
+  left: .04em;
+  top: .66em;
+  background: var(--slate);
+  font-size: 1em;
+}
+.prose ul ul ul:not(.endnotes *) > li::before {
+  width: .22em;
+  height: .22em;
+  top: .68em;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--slate) 72%, var(--bg));
+}
+.prose ol:not(.endnotes) {
+  padding-left: 1.7em;
+  list-style-position: outside;
+}
+.prose ol:not(.endnotes) > li::marker {
+  color: var(--slate);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: .95em;
+  font-variant-numeric: oldstyle-nums tabular-nums;
+  font-feature-settings: "onum" 1, "tnum" 1;
+}
+.prose li > :is(ul, ol):not(.endnotes *) {
+  margin-top: .35em;
+  margin-bottom: .1em;
+}
+
 .prose blockquote {
   margin: 1.5em 0 1.5em .15em;
   padding: 0 0 0 1.15em;
