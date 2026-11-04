@@ -2,6 +2,8 @@
 import Page from "../layouts/Page.astro";
 import { readPublicImageSize } from "../lib/image-size";
 import { loadMediaTimeline } from "../lib/media";
+import { IMAGE_SIZES } from "../lib/responsive-image";
+import ResponsiveImage from "../components/ResponsiveImage.astro";
 
 const title = "Media Timeline";
 const description = "A timeline of noteworthy articles, videos and media appearances.";
@@ -29,13 +31,14 @@ for (const item of items) {
           <h3 class="media-item"><a href={item.href}>{item.title}</a></h3>
           <figure class="fig">
             <a href={item.href}>
-              <img
+              <ResponsiveImage
                 src={item.image}
                 alt=""
                 width={item.width}
                 height={item.height}
                 loading={item.loading}
                 decoding="async"
+                sizes={IMAGE_SIZES.column}
               />
             </a>
           </figure>

@@ -1,0 +1,60 @@
+---
+import { formatSrcset, variantList } from "../lib/responsive-image";
+
+interface Props {
+  src: string;
+  alt?: string;
+  width: number | string;
+  height: number | string;
+  loading?: "eager" | "lazy";
+  decoding?: "async" | "auto" | "sync";
+  class?: string;
+  sizes: string;
+  fetchpriority?: "high" | "low" | "auto";
+  kind?: "full" | "thumb";
+}
+
+const {
+  src,
+  alt = "",
+  width,
+  height,
+  loading = "lazy",
+  decoding = "async",
+  class: className,
+  sizes,
+  fetchpriority,
+  kind = "full",
+} = Astro.props;
+
+const list = variantList(src, kind);
+const avif = formatSrcset(list, "avif");
+const webp = formatSrcset(list, "webp");
+---
+{avif || webp ? (
+  <picture>
+    {avif && <source type="image/avif" srcset={avif} sizes={sizes} />}
+    {webp && <source type="image/webp" srcset={webp} sizes={sizes} />}
+    <img
+      class={className}
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+    />
+  </picture>
+) : (
+  <img
+    class={className}
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+)}
