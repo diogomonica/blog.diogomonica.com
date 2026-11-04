@@ -1,6 +1,6 @@
 ---
 title: "Hitless TLS Certificate Rotation in Go"
-description: "Hitless TLS certificate rotation is critical to continue our quest of reducing certificate expiration times, while keeping our sanity intact."
+description: "How to rotate TLS certificates in a Go service without dropping connections, so certificate lifetimes can keep getting shorter."
 date: "2017-01-11"
 published: "2017-01-11T08:37:11.000-08:00"
 slug: "hitless-tls-certificate-rotation-in-go"

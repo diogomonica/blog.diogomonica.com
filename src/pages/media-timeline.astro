@@ -6,7 +6,7 @@ import { IMAGE_SIZES } from "../lib/responsive-image";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
 
 const title = "Media Timeline";
-const description = "A timeline of noteworthy articles, videos and media appearances.";
+const description = "Talks, podcasts, interviews and press with Diogo Mónica since 2013, from Docker security and container talks to crypto custody, stablecoins and Erebor.";
 const path = "/media-timeline/";
 
 const items = loadMediaTimeline().map((item, index) => ({
@@ -33,7 +33,7 @@ for (const item of items) {
             <a href={item.href}>
               <ResponsiveImage
                 src={item.image}
-                alt=""
+                alt={item.title}
                 width={item.width}
                 height={item.height}
                 loading={item.loading}

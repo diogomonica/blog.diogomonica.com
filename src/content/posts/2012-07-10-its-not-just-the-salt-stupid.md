@@ -1,6 +1,6 @@
 ---
 title: "It's not just the salt, stupid"
-description: "There have been hundreds of articles about the recent password hash leaks from Linked-in and eHarmony."
+description: "After the LinkedIn and eHarmony leaks, everyone blamed missing salts. Salting matters, but slow hashes and key stretching matter more."
 date: "2012-07-10"
 published: "2012-07-10T14:43:00.000-07:00"
 slug: "its-not-just-the-salt-stupid"

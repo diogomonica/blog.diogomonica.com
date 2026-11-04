@@ -1,6 +1,6 @@
 ---
 title: "Sniffing in Monitor Mode with Airport"
-description: "Sniffing in OS X has been a reality for quite some time, thanks to the effort of people like the guys from Kismet and KisMAC."
+description: "How to put the built-in AirPort card in OS X into monitor mode and sniff Wi-Fi traffic from the command line."
 date: "2011-04-10"
 published: "2011-04-10T14:56:00.000-07:00"
 slug: "sniffing-in-monitor-mode-with-airport"

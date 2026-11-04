@@ -1,6 +1,6 @@
 ---
 title: "Why you shouldn't use ENV variables for secret data"
-description: "If your application requires a password, SSH private key, TLS Certificate, or any other kind of sensitive data, you shouldn't pass it alongside your configs."
+description: "Passwords, private keys and TLS certificates should not travel in environment variables. Why they leak, and how to deliver secrets instead."
 date: "2017-03-27"
 published: "2017-03-27T09:33:07.000-07:00"
 slug: "why-you-shouldnt-use-env-variables-for-secret-data"

@@ -1,6 +1,6 @@
 ---
 title: "Password Security: Why the horse battery staple is not correct"
-description: "Why the horse battery staple is not correct: We should **not** be incentivizing people to choose passwords in the first place."
+description: "After the iCloud compromises, the advice was to pick stronger passwords. The better fix is to stop asking people to choose passwords at all."
 date: "2014-10-11"
 published: "2014-10-11T14:09:00.000-07:00"
 slug: "password-security-why-the-horse-battery-staple-is-not-correct"

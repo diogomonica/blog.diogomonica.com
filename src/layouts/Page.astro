@@ -1,6 +1,6 @@
 ---
 import Base from "./Base.astro";
-import { PERSON, SITE } from "../lib/site";
+import { PERSON, PERSON_ID, SITE, WEBSITE, WEBSITE_ID } from "../lib/site";
 
 interface Props {
   title: string;
@@ -13,8 +13,17 @@ const current = path === "/media-timeline/" ? "media" : undefined;
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "WebPage", "name": title, "url": new URL(path, SITE).href, "description": description },
+    {
+      "@type": path === "/media-timeline/" ? "CollectionPage" : "WebPage",
+      "name": title,
+      "url": new URL(path, SITE).href,
+      "description": description,
+      "inLanguage": "en",
+      "isPartOf": { "@id": WEBSITE_ID },
+      "about": { "@id": PERSON_ID },
+    },
     PERSON,
+    WEBSITE,
   ],
 };
 ---

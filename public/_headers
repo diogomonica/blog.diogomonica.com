@@ -1,0 +1,12 @@
+# Markdown alternates of each post: readable by agents, kept out of search indexes,
+# canonical points to the HTML page.
+/:year/:month/:day/:slug/index.md
+  Content-Type: text/markdown; charset=utf-8
+  X-Robots-Tag: noindex
+  Link: <https://blog.diogomonica.com/:year/:month/:day/:slug/>; rel="canonical"
+
+/llms-full.txt
+  X-Robots-Tag: noindex
+
+/og/*
+  Cache-Control: public, max-age=86400

@@ -1,6 +1,6 @@
 ---
 title: "Why should *hard* be secure enough? Information and non-invertibility"
-description: "The guarantees provided by hashes are of critical importance for security. One of the major points of hashes is, of course, their non-invertibility. However..."
+description: "Hash functions are hard to invert, not impossible. An information-theory view of when inversion is truly impossible and why that matters."
 date: "2017-02-03"
 published: "2017-02-03T07:21:16.000-08:00"
 slug: "why-should-hard-be-secure-enough-information-and-non-invertibility-2"

@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "images": "node scripts/optimize-images.mjs",
     "build": "node scripts/optimize-images.mjs && astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "og": "node scripts/og-cards.mjs"
   },
   "dependencies": {
     "astro": "^5.13.0"

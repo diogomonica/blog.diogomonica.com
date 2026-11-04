@@ -1,6 +1,6 @@
 ---
 title: "Bitcoin hard-forks and replay attacks"
-description: "Given that the fork in November might not have replay protection, you'll have to ensure you protect yourself before you transact any BTC."
+description: "A Bitcoin hard fork without replay protection lets a transaction on one chain be replayed on the other. How to split your coins first."
 date: "2017-09-25"
 published: "2017-09-25T08:42:16.000-07:00"
 slug: "what-to-do-before-a-blockchain-hard-fork"
