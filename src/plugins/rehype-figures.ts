@@ -1,4 +1,5 @@
 import { readPublicImageSize } from "../lib/image-size";
+import { IMAGE_SIZES, formatSrcset, variantList, type ImageLayout } from "../lib/responsive-image";
 
 type Text = { type: "text"; value: string };
 type Element = {
@@ -79,7 +80,48 @@ function localSize(src: string): { width: number; height: number } | null {
 
 let eagerLeft = true;
 
-function decorateImage(img: Element, inPair: boolean) {
+function layoutFor(size: { width: number; height: number } | null, inPair: boolean): ImageLayout {
+  if (inPair) return "pair";
+  if (!size) return "column";
+  const ratio = size.width / size.height;
+  if (size.width >= 720 && ratio >= 1.45) return "wide";
+  if (size.height > size.width * 1.05 && size.width <= 760) return "portrait";
+  return "column";
+}
+
+function withPicture(img: Element, layout: ImageLayout) {
+  const src = typeof img.properties.src === "string" ? img.properties.src : "";
+  const list = src ? variantList(src, "full") : [];
+  const avif = formatSrcset(list, "avif");
+  const webp = formatSrcset(list, "webp");
+  if (!avif && !webp) return img;
+  const sizes = IMAGE_SIZES[layout];
+  const sources: Element[] = [];
+  if (avif) {
+    sources.push({
+      type: "element",
+      tagName: "source",
+      properties: { type: "image/avif", srcSet: avif, sizes },
+      children: [],
+    });
+  }
+  if (webp) {
+    sources.push({
+      type: "element",
+      tagName: "source",
+      properties: { type: "image/webp", srcSet: webp, sizes },
+      children: [],
+    });
+  }
+  return {
+    type: "element" as const,
+    tagName: "picture",
+    properties: {},
+    children: [...sources, img],
+  };
+}
+
+function decorateImage(img: Element, classPair: boolean, layoutPair: boolean) {
   const src = typeof img.properties.src === "string" ? img.properties.src : "";
   const alt = typeof img.properties.alt === "string" ? img.properties.alt.trim() : "";
   const size = src ? localSize(src) : null;
@@ -87,24 +129,36 @@ function decorateImage(img: Element, inPair: boolean) {
   if (size && img.properties.height == null) img.properties.height = size.height;
   if (img.properties.decoding == null) img.properties.decoding = "async";
   if (img.properties.loading == null) {
-    img.properties.loading = eagerLeft ? "eager" : "lazy";
+    const eager = eagerLeft;
+    img.properties.loading = eager ? "eager" : "lazy";
+    if (eager) img.properties.fetchPriority = "high";
     eagerLeft = false;
   }
 
   const classes = ["fig", "plate"];
-  if (!inPair && size) {
-    const ratio = size.width / size.height;
-    if (size.width >= 720 && ratio >= 1.45) classes.push("wide");
-    else if (size.height > size.width * 1.05 && size.width <= 760) classes.push("portrait");
-  }
-  return { alt, classes };
+  const natural = layoutFor(size, false);
+  if (!classPair && natural === "wide") classes.push("wide");
+  else if (!classPair && natural === "portrait") classes.push("portrait");
+  return { alt, classes, layout: layoutPair ? "pair" : natural };
+}
+
+function rawHtml(node: Content): string {
+  if (node.type !== "raw") return "";
+  const value = (node as { value?: string }).value;
+  return typeof value === "string" ? value : "";
 }
 
 function transform(parent: { children: Content[] }, inPair: boolean) {
   const nextChildren: Content[] = [];
   const children = parent.children;
+  let rawShotRow = false;
   for (let index = 0; index < children.length; index += 1) {
     const child = children[index];
+    const raw = rawHtml(child);
+    if (raw) {
+      if (/<div\b[^>]*\bshot-row\b/i.test(raw) && !/<\/div>/i.test(raw)) rawShotRow = true;
+      else if (/<\/div>/i.test(raw)) rawShotRow = false;
+    }
     if (!isElement(child)) {
       nextChildren.push(child);
       continue;
@@ -124,7 +178,22 @@ function transform(parent: { children: Content[] }, inPair: boolean) {
       continue;
     }
 
-    const { alt, classes } = decorateImage(image, pair);
+    const { alt, classes, layout } = decorateImage(image, pair, pair || rawShotRow);
+    const picture = withPicture(image, layout);
+    if (picture !== image) {
+      const direct = child.children.indexOf(image);
+      if (direct >= 0) child.children[direct] = picture;
+      else {
+        for (const node of child.children) {
+          if (!isElement(node)) continue;
+          const at = node.children.indexOf(image);
+          if (at >= 0) {
+            node.children[at] = picture;
+            break;
+          }
+        }
+      }
+    }
     const figure: Element = {
       type: "element",
       tagName: "figure",

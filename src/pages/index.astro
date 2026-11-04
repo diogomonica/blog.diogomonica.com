@@ -5,6 +5,8 @@ import { formatDate } from "../lib/format";
 import { DISPLAY, BIO, PERSON, PERSON_ID, SITE } from "../lib/site";
 import { buildStats, FEATURED_COUNT } from "../lib/stats";
 import { loadHomepageMedia } from "../lib/media";
+import { IMAGE_SIZES } from "../lib/responsive-image";
+import ResponsiveImage from "../components/ResponsiveImage.astro";
 
 const stats = buildStats(await getCollection("posts"));
 const homePosts = stats.posts.slice(0, FEATURED_COUNT);
@@ -34,7 +36,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type":
       {media.latest.map((item) => (
         <li class="toc-item">
           <div class="toc-media-row">
-            <img class="toc-thumb" src={item.image} alt="" width="76" height="48" loading="lazy" decoding="async" />
+            <ResponsiveImage class="toc-thumb" src={item.image} alt="" width="76" height="48" loading="lazy" decoding="async" sizes={IMAGE_SIZES.thumb} kind="thumb" />
             <div>
               <p class="toc-date"><time datetime={item.date}>{formatDate(item.date)}</time></p>
               <a class="toc-title" href={item.href}>{item.title}</a>
