@@ -1,6 +1,6 @@
 ---
 title: "Change your MAC with py-MACtool"
-description: "I've had to change my MAC address for countless reasons. Either because I was doing some penetration testing, or just to debug some network errors..."
+description: "py-MACtool: a small Python tool for changing your network card's MAC address on macOS, handy for penetration testing and network debugging."
 date: "2011-01-16"
 published: "2011-01-16T13:49:00.000-08:00"
 slug: "change-your-mac-with-py-mactool"

@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { formatDate } from "../lib/format";
-import { DISPLAY, BIO, PERSON, PERSON_ID, SITE } from "../lib/site";
+import { HOME_DESCRIPTION, HOME_TITLE, PERSON, WEBSITE } from "../lib/site";
 import { buildStats, FEATURED_COUNT } from "../lib/stats";
 import { loadHomepageMedia } from "../lib/media";
 import { IMAGE_SIZES } from "../lib/responsive-image";
@@ -12,9 +12,9 @@ const stats = buildStats(await getCollection("posts"));
 const homePosts = stats.posts.slice(0, FEATURED_COUNT);
 const media = loadHomepageMedia();
 
-const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { "@type": "WebSite", "name": DISPLAY, "url": SITE, "author": { "@id": PERSON_ID } }] };
+const jsonLd = { "@context": "https://schema.org", "@graph": [PERSON, { ...WEBSITE, description: HOME_DESCRIPTION }] };
 ---
-<Base title={DISPLAY} description={BIO} path="/" jsonLd={jsonLd} current="home">
+<Base title={HOME_TITLE} description={HOME_DESCRIPTION} path="/" jsonLd={jsonLd} current="home">
   <h1 class="sr-only">Essays</h1>
 
   <div class="col front">

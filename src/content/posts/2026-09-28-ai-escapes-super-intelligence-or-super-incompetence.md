@@ -6,6 +6,7 @@ published: "2026-09-28T17:00:00.000Z"
 slug: "ai-escapes-super-intelligence-or-super-incompetence"
 tags: ["security", "ai"]
 deadImages: []
+cardImage: "/content/images/2026/09/ai-escapes-palm-tree.jpg"
 ---
 
 ![Palm Tree Escape — Captain Jack Sparrow](/content/images/2026/09/ai-escapes-palm-tree.jpg)

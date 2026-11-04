@@ -3,42 +3,77 @@ import { getCollection, render } from "astro:content";
 import Base from "../../../../layouts/Base.astro";
 import RecordNav from "../../../../components/RecordNav.astro";
 import { formatDate } from "../../../../lib/format";
-import { PERSON, PERSON_ID, SITE } from "../../../../lib/site";
-import { buildPostRecords } from "../../../../lib/posts";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { DEFAULT_CARD, PERSON, PERSON_ID, SITE, WEBSITE, WEBSITE_ID } from "../../../../lib/site";
+import { buildPostRecords, wordCount } from "../../../../lib/posts";
+import { hrefFor } from "../../../../lib/stats";
+import { relatedSlugs, securityClusterFor, SECURITY_TOPIC } from "../../../../lib/topics";
 
 export async function getStaticPaths() {
   const records = buildPostRecords(await getCollection("posts"));
+  const bySlug = new Map(records.map(({ post }) => [post.data.slug, post]));
   return records.map(({ post, readingTime, prev, next }) => {
+    const related = relatedSlugs(post.data.slug)
+      .map((slug) => bySlug.get(slug))
+      .filter((p) => p !== undefined)
+      .map((p) => ({ title: p.data.title, date: p.data.date, href: hrefFor(p.data.date, p.data.slug) }));
     const [year, month, day] = post.data.date.split("-");
     return {
       params: { year, month, day, slug: post.data.slug },
-      props: { post, readingTime, prev, next },
+      props: { post, readingTime, prev, next, related },
     };
   });
 }
 
-const { post, readingTime, prev, next } = Astro.props;
+const { post, readingTime, prev, next, related } = Astro.props;
 const { Content } = await render(post);
 const { year, month, day, slug } = Astro.params;
 const path = `/${year}/${month}/${day}/${slug}/`;
 const url = new URL(path, SITE).href;
+const canonicalUrl = post.data.canonical ?? url;
+const cluster = securityClusterFor(slug);
+const seoTitle = post.data.seoTitle ?? post.data.title;
+const cardSrc = `/og/posts/${slug}.png`;
+const card = existsSync(join(process.cwd(), "public", cardSrc))
+  ? { src: cardSrc, width: 1200, height: 630, alt: `${post.data.title.replace(/[*_`]/g, "")} — essay by Diogo Mónica` }
+  : DEFAULT_CARD;
+const published = post.data.published;
+const modified = post.data.updated ?? published;
 const posting = {
   "@type": "BlogPosting",
+  "@id": `${url}#article`,
   headline: post.data.title,
+  ...(post.data.seoTitle ? { alternativeHeadline: post.data.seoTitle } : {}),
   description: post.data.description,
-  datePublished: post.data.published,
-  url,
+  datePublished: published,
+  dateModified: modified,
+  url: canonicalUrl,
+  mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+  image: { "@type": "ImageObject", url: new URL(card.src, SITE).href, width: card.width, height: card.height },
   author: { "@id": PERSON_ID },
-  mainEntityOfPage: url,
+  publisher: { "@id": PERSON_ID },
+  isPartOf: { "@id": WEBSITE_ID },
   inLanguage: "en",
+  wordCount: wordCount(typeof post.body === "string" ? post.body : ""),
+  ...(cluster ? { about: [{ "@type": "Thing", name: "Computer security" }, { "@type": "Thing", name: cluster.name }] } : {}),
   ...(post.data.tags.length > 0 ? { keywords: post.data.tags } : {}),
+};
+const crumbs = [
+  { name: "Blog", item: `${SITE}/` },
+  ...(cluster ? [{ name: "Security", item: new URL(SECURITY_TOPIC.path, SITE).href }] : []),
+  { name: post.data.title.replace(/[*_`]/g, ""), item: url },
+];
+const breadcrumb = {
+  "@type": "BreadcrumbList",
+  itemListElement: crumbs.map((crumb, index) => ({ "@type": "ListItem", position: index + 1, ...crumb })),
 };
 const jsonLd = {
   "@context": "https://schema.org",
-  "@graph": [PERSON, posting],
+  "@graph": [PERSON, WEBSITE, posting, breadcrumb],
 };
 ---
-<Base title={post.data.title} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd} canonical={post.data.canonical}>
+<Base title={seoTitle} description={post.data.description} path={path} ogType="article" jsonLd={jsonLd} canonical={post.data.canonical} image={card} markdown={`${path}index.md`} article={{ published, modified, tags: post.data.tags }}>
   <div class="topline" aria-hidden="true"></div>
   <nav class="rail" aria-label="Sections">
     <div class="rail-track" aria-hidden="true"></div>
@@ -54,6 +89,20 @@ const jsonLd = {
     <div class="prose">
       <Content />
     </div>
+    {related.length > 0 && (
+      <aside class="related" aria-labelledby="related-kicker">
+        <p class="toc-kicker" id="related-kicker">More on security</p>
+        <ol class="toc">
+          {related.map((item) => (
+            <li class="toc-item">
+              <p class="toc-date"><time datetime={item.date}>{formatDate(item.date)}</time></p>
+              <a class="toc-title" href={item.href}>{item.title}</a>
+            </li>
+          ))}
+        </ol>
+        <p class="toc-more"><a href={SECURITY_TOPIC.path}>All security essays</a></p>
+      </aside>
+    )}
     <RecordNav url={url} prev={prev} next={next} />
   </article>
 </Base>

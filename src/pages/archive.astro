@@ -2,15 +2,45 @@
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import { formatDate } from "../lib/format";
-import { DISPLAY } from "../lib/site";
+import { PERSON, PERSON_ID, SITE, WEBSITE, WEBSITE_ID } from "../lib/site";
 import { buildStats, featuredKey, featuredKeys } from "../lib/stats";
 
 const stats = buildStats(await getCollection("posts"));
 const featured = featuredKeys(stats.posts);
 const byYear = [...stats.yearCounts].reverse().filter((y) => y.count > 0);
 const years = [...byYear].reverse().map((y) => y.year);
+const description = `All ${stats.total} essays by Diogo Mónica since ${stats.firstYear}, on security engineering, AI, crypto custody, stablecoins and venture investing.`;
+const url = new URL("/archive/", SITE).href;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    PERSON,
+    WEBSITE,
+    {
+      "@type": "CollectionPage",
+      "@id": `${url}#page`,
+      url,
+      name: "All essays",
+      description,
+      inLanguage: "en",
+      isPartOf: { "@id": WEBSITE_ID },
+      author: { "@id": PERSON_ID },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: stats.total,
+        itemListOrder: "https://schema.org/ItemListOrderDescending",
+        itemListElement: stats.posts.map((post, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: new URL(post.href, SITE).href,
+          name: post.title,
+        })),
+      },
+    },
+  ],
+};
 ---
-<Base title="Archive" description={`All posts by ${DISPLAY}`} path="/archive/" current="archive">
+<Base title="Archive" description={description} path="/archive/" jsonLd={jsonLd} current="archive">
   <article class="ch col">
     <header class="ch-head">
       <p class="ch-kicker">Contents</p>

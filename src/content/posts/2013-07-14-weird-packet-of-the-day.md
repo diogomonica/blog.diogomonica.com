@@ -1,6 +1,6 @@
 ---
 title: "Weird packet of the day"
-description: "Once in a while I open wireshark and just look at my baseline traffic. It's useful for when I actually want to find something weird to quickly distinguish between what's normal and what looks fishy."
+description: "Tracing an odd outbound connection seen in Wireshark back to the macOS process that made it, using netstat and lsof."
 date: "2013-07-14"
 published: "2013-07-14T14:38:00.000-07:00"
 slug: "weird-packet-of-the-day"

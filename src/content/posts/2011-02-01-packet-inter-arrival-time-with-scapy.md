@@ -1,6 +1,6 @@
 ---
 title: "Packet Inter Arrival Time With Scapy"
-description: "I wanted to capture, for statistical purposes, the inter-arrival time of packets sent from a remote machine."
+description: "Measuring the inter-arrival time of packets from a remote host with Scapy: tag the packets, capture them to a .pcap, and diff their timestamps."
 date: "2011-02-01"
 published: "2011-02-01T13:52:00.000-08:00"
 slug: "packet-inter-arrival-time-with-scapy"

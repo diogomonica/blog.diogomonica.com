@@ -1059,6 +1059,15 @@ a.nref {
   color: var(--ink);
 }
 
+.related {
+  margin: 3.2rem 0 0;
+}
+.related .toc-kicker {
+  margin-top: 0;
+}
+.topic-intro {
+  margin: 0 0 .5rem;
+}
 .record-nav {
   margin: 3.2rem 0 0;
   padding-top: 1.1rem;

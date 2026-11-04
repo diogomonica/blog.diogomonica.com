@@ -1,11 +1,12 @@
 ---
 title: "Crypto Anchors: Exfiltration Resistant Infrastructure"
-description: "We need to start architecting our data-flows in a way that makes it harder for attackers to continue exfiltrating sensitive data our of our infrastructures"
+description: "Crypto anchors: keep secrets inside an HSM so a breach of your servers yields nothing an attacker can crack offline."
 date: "2017-10-08"
 published: "2017-10-08T15:31:47.000-07:00"
 slug: "crypto-anchors-exfiltration-resistant-infrastructure"
 tags: ["crypto-anchors", "infosec"]
 deadImages: []
+cardImage: "/content/images/2017/10/crypto-anchor.png"
 ---
 
 I've been thinking about a concept that I came up with a few years ago: [crypto-anchoring](https://www.youtube.com/watch?v=lrGbK6fE7bI&ref=blog.diogomonica.com)—and how much impact this kind of architectural decision could have in the breaches that we've been [experiencing lately](http://fortune.com/2017/10/02/equifax-credit-breach-total/).

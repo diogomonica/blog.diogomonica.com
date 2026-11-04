@@ -1,11 +1,12 @@
 ---
 title: "Monitor VS Promiscuous"
-description: "Differences between Monitor VS Promiscuous mode in wireless NICs"
+description: "Monitor mode vs. promiscuous mode on Wi-Fi cards: promiscuous only sees traffic on the network you joined; monitor mode sniffs any network on the channel."
 date: "2011-01-06"
 published: "2011-01-06T13:47:00.000-08:00"
 slug: "monitor-vs-promiscuous"
 tags: ["macOS", "wifi"]
 deadImages: []
+seoTitle: "Monitor vs. promiscuous mode for Wi-Fi sniffing"
 ---
 
 One of the confusions I see often in wireless sniffing related discussions, is the difference between Monitor and Promiscuous mode.

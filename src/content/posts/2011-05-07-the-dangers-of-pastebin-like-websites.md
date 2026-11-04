@@ -1,6 +1,6 @@
 ---
 title: "The dangers of pastebin-like websites"
-description: "Services like pastebin.com are useful for sharing and discussing code. However, people trust the generated URLs to be unknown to anyone else, other than the people we want to share them with."
+description: "Pastebin-style sites leak secrets: search, \"latest pastes\" feeds and guessable URLs expose passwords and keys people thought were private."
 date: "2011-05-07"
 published: "2011-05-07T15:05:00.000-07:00"
 slug: "the-dangers-of-pastebin-like-websites"

@@ -1,6 +1,6 @@
 ---
 title: "From F to A+: Getting Good Grades on Website Security Evaluations"
-description: "Even though www.diogomonica.com is a statically generated HTML blog, I took the time to go from an F on securityheaders.io to an A+."
+description: "Taking a static blog from an F to an A+ on securityheaders.io with CSP, HSTS and the other HTTP security headers, and what each one does."
 date: "2015-12-29"
 published: "2015-12-29T07:18:00.000-08:00"
 slug: "from-double-f-to-double-a"

@@ -1,6 +1,6 @@
 ---
 title: "The two metrics that matter for host security"
-description: "The rise of the two metrics that matter for host security: reverse uptime and golden image freshness."
+description: "Stop counting unpatched CVEs. For ephemeral infrastructure, track reverse uptime and golden image freshness instead."
 date: "2017-09-01"
 published: "2017-08-31T18:34:08.000-07:00"
 slug: "two-metrics-that-matter-for-host-security"

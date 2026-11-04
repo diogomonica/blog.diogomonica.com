@@ -1,6 +1,6 @@
 ---
 title: "Poor man's SSH keylogger"
-description: "If you have compromised a system (while doing penetration testing, obviously), or if you are just a BOFH that wishes to have a little fun, you can do something as easy as this."
+description: "A one-line ssh alias that wraps the client in strace and logs every keystroke, including remote usernames and passwords, on a compromised host."
 date: "2011-02-03"
 published: "2011-02-03T13:53:00.000-08:00"
 slug: "poor-mans-ssh-keylogger"

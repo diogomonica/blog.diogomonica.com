@@ -59,34 +59,24 @@ export const DEGREES = [
     },
   },
 ];
+/** The canonical Person lives on the hub; the blog references it by @id. */
 export const PERSON = {
   '@type': 'Person',
   '@id': PERSON_ID,
   name: DISPLAY,
-  alternateName: NAME,
   url: APEX,
-  description: BIO,
-  jobTitle: ROLES,
-  hasOccupation: {
-    '@type': 'Occupation',
-    name: 'CEO responsibilities, Anchorage Digital',
-  },
-  sameAs: [...SAME_AS, SITE],
-  identifier: {
-    '@type': 'PropertyValue',
-    propertyID: 'Google Knowledge Graph ID',
-    value: '/g/11q96pmchp',
-  },
-  alumniOf: IST,
-  hasCredential: DEGREES.map((degree) => degree.credential),
-  image: `${SITE}/media-kit/Diogo_Monica_Founder_Engineer.web.jpg`,
-  knowsAbout: [
-    'security engineering',
-    'digital-asset custody',
-    'stablecoins',
-    'cryptographic infrastructure',
-    'fintech regulation',
-    'venture capital',
-  ],
-  subjectOf: `${SITE}/media-timeline/`,
 };
+export const WEBSITE_ID = `${SITE}/#website`;
+export const WEBSITE = {
+  '@type': 'WebSite',
+  '@id': WEBSITE_ID,
+  name: DISPLAY,
+  url: `${SITE}/`,
+  inLanguage: 'en',
+  author: { '@id': PERSON_ID },
+  publisher: { '@id': PERSON_ID },
+};
+export const HOME_TITLE = 'Essays on security, AI and digital assets · Diogo Mónica';
+export const HOME_DESCRIPTION = 'Essays on security engineering, AI, crypto custody and investing, from a security engineer who led security at Docker and co-founded Anchorage Digital.';
+export const SECURITY_BIO = 'Security engineer. Led security at Docker and platform security at Square, served on the Open Container Initiative technical oversight board, and was involved in developing the Notary project, accepted by the Cloud Native Computing Foundation.';
+export const DEFAULT_CARD = { src: '/og/default.png', width: 1200, height: 630, alt: 'Diogo Mónica — essays on security, AI and digital assets' };

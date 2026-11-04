@@ -1,6 +1,6 @@
 ---
 title: "Increasing Attacker Cost Using Immutable Infrastructure"
-description: "Applications will never be perfect, but immutable infrastructure helps with incident response, allows fast-recovery, and makes the attacker’s jobs harder."
+description: "Immutable infrastructure raises attacker cost: rebuilt-from-image hosts speed incident response and recovery and make persistence harder."
 date: "2016-11-19"
 published: "2016-11-19T15:47:51.000-08:00"
 slug: "increasing-attacker-cost-using-immutable-infrastructure"

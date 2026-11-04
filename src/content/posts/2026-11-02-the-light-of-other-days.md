@@ -1,11 +1,12 @@
 ---
 title: "The light of other days"
-description: "In The Light of Other Days, Arthur C. Clarke imagines a world in which wormhole technology lets anyone spy on anyone."
+description: "The $6.3B Binance hack needed no AI. What AI and quantum computing change for key security, and what defenders should do now."
 date: "2026-11-02"
 published: "2026-11-02T17:00:00.000Z"
 slug: "the-light-of-other-days"
 tags: ["security", "ai"]
 deadImages: []
+cardImage: "/content/images/2026/11/security-is-a-balance.png"
 ---
 
 In [*The Light of Other Days*](https://en.wikipedia.org/wiki/The_Light_Of_Other_Days), Arthur C. Clarke imagines a world in which wormhole technology lets anyone spy on anyone. Privacy disappears, forcing society to completely reshape its institutions to limit the harm of exposed secrets.

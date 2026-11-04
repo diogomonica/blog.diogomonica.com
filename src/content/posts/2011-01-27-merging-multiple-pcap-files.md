@@ -1,6 +1,6 @@
 ---
 title: "Merging multiple .pcap files"
-description: "Today I needed to merge 40 ~600Mb .pcap"
+description: "How to merge dozens of large .pcap capture files into one with tcpslice from the tcpdump tools, with mergecap from Wireshark as the alternative."
 date: "2011-01-27"
 published: "2011-01-27T13:50:00.000-08:00"
 slug: "merging-multiple-pcap-files"

@@ -1,6 +1,6 @@
 ---
 title: "Facebook Sidejacking"
-description: "I've just released a tool called py-cookieJsInjection on github."
+description: "py-cookieJsInjection sniffs session cookies off an open network and turns them into JavaScript you can paste into a browser to hijack the session."
 date: "2011-04-04"
 published: "2011-04-04T14:55:00.000-07:00"
 slug: "facebook-sidejacking"

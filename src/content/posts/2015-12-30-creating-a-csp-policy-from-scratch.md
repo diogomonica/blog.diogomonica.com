@@ -1,6 +1,6 @@
 ---
 title: "Creating a CSP Policy from Scratch"
-description: "In this post I go over how to create a least-privilege CSP policy from scratch."
+description: "How to build a least-privilege Content Security Policy from scratch: start from deny-all, use report-only mode, and allow only what the site loads."
 date: "2015-12-30"
 published: "2015-12-30T12:54:00.000-08:00"
 slug: "creating-a-csp-policy-from-scratch"

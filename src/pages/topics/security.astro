@@ -1,0 +1,88 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { formatDate } from "../../lib/format";
+import { ABOUT, PERSON, PERSON_ID, SECURITY_BIO, SITE, WEBSITE, WEBSITE_ID } from "../../lib/site";
+import { hrefFor } from "../../lib/stats";
+import { SECURITY_CLUSTERS, SECURITY_TOPIC } from "../../lib/topics";
+
+const posts = await getCollection("posts");
+const bySlug = new Map(posts.map((post) => [post.data.slug, post]));
+const clusters = SECURITY_CLUSTERS.map((cluster) => ({
+  ...cluster,
+  posts: cluster.slugs
+    .map((slug) => bySlug.get(slug))
+    .filter((post) => post !== undefined)
+    .map((post) => ({
+      title: post.data.title,
+      description: post.data.description,
+      date: post.data.date,
+      href: hrefFor(post.data.date, post.data.slug),
+    })),
+}));
+const years = clusters.flatMap((c) => c.posts.map((p) => p.date.slice(0, 4))).sort();
+const span = `${years[0]}–${years.at(-1)}`;
+const total = clusters.reduce((sum, cluster) => sum + cluster.posts.length, 0);
+const url = new URL(SECURITY_TOPIC.path, SITE).href;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    PERSON,
+    WEBSITE,
+    {
+      "@type": "CollectionPage",
+      "@id": `${url}#page`,
+      url,
+      name: SECURITY_TOPIC.title,
+      description: SECURITY_TOPIC.description,
+      inLanguage: "en",
+      isPartOf: { "@id": WEBSITE_ID },
+      author: { "@id": PERSON_ID },
+      about: { "@type": "Thing", name: "Computer security" },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: total,
+        itemListElement: clusters.flatMap((cluster) => cluster.posts).map((post, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: new URL(post.href, SITE).href,
+          name: post.title,
+        })),
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Blog", item: `${SITE}/` },
+        { "@type": "ListItem", position: 2, name: "Security", item: url },
+      ],
+    },
+  ],
+};
+---
+<Base title={SECURITY_TOPIC.title} description={SECURITY_TOPIC.description} path={SECURITY_TOPIC.path} jsonLd={jsonLd}>
+  <article class="ch col">
+    <header class="ch-head">
+      <p class="ch-kicker">Topic</p>
+      <h1 class="ch-title">Security</h1>
+      <p class="ch-meta">{total} essays <span class="fell">·</span> {span}</p>
+    </header>
+    <div class="prose topic-intro">
+      <p>{SECURITY_BIO} More in the <a href={ABOUT}>about page</a>.</p>
+    </div>
+    {clusters.map((cluster) => (
+      <section class="year-block" id={cluster.id}>
+        <h2 class="year-kicker">{cluster.name} <span class="fell">·</span> {cluster.posts.length}</h2>
+        <ol class="toc">
+          {cluster.posts.map((post) => (
+            <li class="toc-item">
+              <p class="toc-date"><time datetime={post.date}>{formatDate(post.date)}</time></p>
+              <a class="toc-title" href={post.href}>{post.title}</a>
+              {post.description && <p class="toc-sum">{post.description}</p>}
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </article>
+</Base>
